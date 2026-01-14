@@ -474,9 +474,9 @@ class SearchMapWithGoogleMaps extends Component {
       const { bounds, center = new sdkTypes.LatLng(0, 0), zoom = 11 } = this.props;
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
-      // @r7avi - Default map view to India instead of world map
-      const zoomOutToShowEarth = { zoom: 5, center: { lat: 20.5937, lng: 78.9629 } };
-      const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
+      // @r7avi - Default map view to India, but try to get user's location first
+      const indiaCenter = { zoom: 5, center: { lat: 20.5937, lng: 78.9629 } };
+      const zoomAndCenter = !bounds && !center ? indiaCenter : { zoom, center };
 
       const mapConfig = {
         // Disable all controls except zoom
@@ -500,6 +500,30 @@ class SearchMapWithGoogleMaps extends Component {
       this.setState({
         isMapReady: true,
       });
+
+      // @r7avi - Try to get user's location and center map on it
+      if (!bounds && !center && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            // Center map on user's location with appropriate zoom
+            this.map.setCenter(userLocation);
+            this.map.setZoom(12);
+          },
+          (error) => {
+            // If geolocation fails, map stays at India center (already set)
+            console.log('Geolocation error, using India as default:', error.message);
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 5000,
+            maximumAge: 0,
+          }
+        );
+      }
     }
   }
 
