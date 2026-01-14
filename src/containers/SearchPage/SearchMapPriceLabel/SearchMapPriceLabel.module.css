@@ -1,3 +1,4 @@
+/* @r7avi - Map pin icon styles for civil contractors marketplace */
 @import '../../../styles/customMediaQueries.css';
 
 .root {
@@ -6,106 +7,32 @@
   height: auto;
   border: 0;
   padding: 0;
+  background: transparent;
+  cursor: pointer;
 
   &:hover {
-    & .priceLabel,
-    & .caret {
-      cursor: pointer;
-
-      /* Same as active */
-      background-color: var(--marketplaceColor);
-      border-color: var(--marketplaceColor);
-      color: var(--colorWhite);
-      box-shadow: var(--boxShadowPopup);
+    & .mapPin .pinFill {
+      fill: var(--marketplaceColorDark);
     }
   }
 }
 
-.priceLabel {
-  composes: h5 from global;
-  /**
-   * Since caret is absolutely positioned,
-   * label must have relative to be included to the same rendering layer
-   */
-  position: relative;
+.mapPin {
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: all 0.2s ease;
 
-  /* Font */
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--colorGrey700);
-  letter-spacing: 0.1px;
-
-  background-color: var(--colorWhite);
-
-  /* Borders */
-  border-style: solid;
-  border-color: var(--colorGrey100);
-  border-width: 1px;
-  border-radius: var(--borderRadiusMedium);
-  box-shadow: var(--boxShadowPopupLight);
-
-  /* Dimensions */
-  padding: 6px 10px;
-  margin-top: 0;
-  margin-bottom: 0;
-  transition: var(--transitionStyleButton);
-
-  /* Overwrite dimensions from font styles */
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
+  &:hover {
+    transform: scale(1.1);
   }
 }
-.noPriceSetLabel {
-  width: 30px;
-  height: 30px;
+
+.pinFill {
+  fill: var(--marketplaceColor);
+  transition: fill 0.2s ease;
 }
 
-.mapLabelActive {
-  /* Same as hover */
-  background-color: var(--marketplaceColor);
-  border-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-  box-shadow: var(--boxShadowPopup);
-}
-
-.caretShadow {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
-
-  /* Caret should have same box-shadow as label */
-  box-shadow: var(--boxShadowPopupLight);
-}
-
-.caret {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
-
-  transition: var(--transitionStyleButton);
-
-  /* Caret should have same bg-color and border as label */
-  background-color: var(--colorWhite);
-  border-right-style: solid;
-  border-right-color: var(--colorGrey100);
-  border-right-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: var(--colorGrey100);
-  border-bottom-width: 1px;
-}
-
-.caretActive {
-  /* Same as hover */
-  background-color: var(--marketplaceColor);
-  border-color: var(--marketplaceColor);
+.mapPinActive .pinFill {
+  fill: var(--marketplaceColorDark);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
 }

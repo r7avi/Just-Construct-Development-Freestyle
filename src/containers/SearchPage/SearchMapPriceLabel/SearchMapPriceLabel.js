@@ -49,40 +49,18 @@ class SearchMapPriceLabel extends Component {
     const currentListing = ensureListing(listing);
     const { price, publicData, title } = currentListing.attributes;
 
-    // Create formatted price if currency is known or alternatively show just the unknown currency.
-    const formattedPrice =
-      price && price.currency === config.currency
-        ? formatMoney(intl, price)
-        : price?.currency
-        ? price.currency
-        : null;
-
-    const priceValue = formattedPrice
-      ? intl.formatMessage({ id: 'SearchMapPriceLabel.price' }, { priceValue: formattedPrice })
-      : null;
-
-    const validListingTypes = config.listing.listingTypes;
-    const foundListingTypeConfig = validListingTypes.find(
-      conf => conf.listingType === publicData?.listingType
-    );
-    const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
-    const hasMultiplePriceVariants =
-      isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
-
-    const priceMessage = hasMultiplePriceVariants
-      ? intl.formatMessage({ id: 'SearchMapInfoCard.priceStartingFrom' }, { priceValue })
-      : intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue });
+    // @r7avi - Get listing type for aria label
+    const listingType = publicData?.listingType || 'listing';
 
     const classes = classNames(rootClassName || css.root, className);
-    const priceLabelClasses = classNames(css.priceLabel, {
-      [css.mapLabelActive]: isActive,
-      [css.noPriceSetLabel]: !formattedPrice,
+    const pinClasses = classNames(css.mapPin, {
+      [css.mapPinActive]: isActive,
     });
-    const caretClasses = classNames(css.caret, { [css.caretActive]: isActive });
 
-    const ariaLabel = priceValue
-      ? priceMessage
-      : intl.formatMessage({ id: 'SearchMapPriceLabel.screenreader.mapMarkerWithoutPrice' });
+    const ariaLabel = intl.formatMessage(
+      { id: 'SearchMapPriceLabel.screenreader.mapMarker' },
+      { title: title || listingType }
+    );
 
     return (
       <button
@@ -90,9 +68,21 @@ class SearchMapPriceLabel extends Component {
         onClick={() => onListingClicked(currentListing)}
         aria-label={ariaLabel}
       >
-        <div className={css.caretShadow} />
-        <div className={priceLabelClasses}>{priceMessage}</div>
-        <div className={caretClasses} />
+        {/* @r7avi - Google Maps style pin icon - smaller size */}
+        <svg
+          className={pinClasses}
+          width="24"
+          height="30"
+          viewBox="0 0 32 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M16 0C7.163 0 0 7.163 0 16c0 12 16 24 16 24s16-12 16-24c0-8.837-7.163-16-16-16z"
+            className={css.pinFill}
+          />
+          <circle cx="16" cy="16" r="6" fill="white" />
+        </svg>
       </button>
     );
   }

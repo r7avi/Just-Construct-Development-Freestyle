@@ -1,3 +1,4 @@
+/* @r7avi - Modern card design above pin for civil contractors marketplace */
 @import '../../../styles/customMediaQueries.css';
 
 .root {
@@ -7,15 +8,21 @@
   border: 0;
   padding: 0;
 
-  /* Borders */
-  border-radius: var(--borderRadiusMedium);
-  box-shadow: var(--boxShadowPopupLight);
+  /* @r7avi - Position card above the pin with offset */
+  transform: translateY(calc(-100% - 15px));
+  margin-bottom: 0;
 
-  transition: var(--transitionStyleButton);
+  /* Modern card styling */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  transition: all 0.3s ease;
 
   &:hover {
     cursor: pointer;
-    box-shadow: var(--boxShadowPopup);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(calc(-100% - 18px)) scale(1.02);
   }
 }
 
@@ -29,32 +36,14 @@
 }
 
 .card {
-  composes: h5 from global;
-  /**
-   * Since caret is absolutely positioned,
-   * label must have relative to be included to the same rendering layer
-   */
   position: relative;
-
-  width: 250px;
-  min-height: 120px;
-
-  /* Font */
+  width: 240px;
+  min-height: auto;
   color: var(--colorGrey700);
-
   background-color: var(--colorWhite);
-
-  /* Dimensions */
   padding: 0;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
   transition: var(--transitionStyleButton);
-
-  /* Overwrite dimensions from font styles */
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 /* Overwrite Mapbox's specific font rules */
@@ -62,133 +51,189 @@
   font-weight: var(--fontWeightSemiBold);
 }
 
-.aspectratioWrapper {
-  background: var(--colorGrey100); /* Loading BG color */
+.aspectRatioWrapper {
+  background: linear-gradient(135deg, var(--colorGrey100) 0%, var(--colorGrey200) 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 .rootForImage {
-  /* Layout - image will take space defined by aspect ratio wrapper */
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   width: 100%;
+  transition: transform 0.3s ease;
 }
 
-.info {
+.anchor:hover .rootForImage {
+  transform: scale(1.05);
+}
+
+.noImagePlaceholder {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
-  padding: 11px 13px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.price {
-  flex-shrink: 0;
+.noImagePlaceholder::before {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%);
+  }
+}
+
+.noImageText {
+  color: var(--colorWhite);
+  font-size: 14px;
+  font-weight: var(--fontWeightMedium);
+  z-index: 1;
+}
+
+.nameOnly {
+  padding: 14px 16px;
+  background-color: var(--colorWhite);
+  position: relative;
+}
+
+.nameOnly::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--marketplaceColor) 0%, var(--marketplaceColorDark) 100%);
+}
+
+.listingName {
+  font-size: 16px;
   font-weight: var(--fontWeightSemiBold);
-  color: var(--marketplaceColor);
-
-  margin-right: 10px;
-}
-
-.name {
-  flex-grow: 1;
+  color: var(--colorGrey700);
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .paginationInfo {
-  background-color: var(--marketplaceColor);
+  background: linear-gradient(135deg, var(--marketplaceColor) 0%, var(--marketplaceColorDark) 100%);
   color: var(--colorWhite);
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: default;
+  height: 44px;
+  position: relative;
 }
 
 .paginationPage {
-  /* Font */
-  composes: textSmall from global;
-  font-weight: var(--fontWeightSemiBold);
-  margin-top: 0;
-  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: var(--fontWeightBold);
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
 
-  /* Overwrite dimensions from font styles */
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+.paginationPrev,
+.paginationNext {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.paginationPrev::before,
+.paginationNext::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.paginationPrev:hover::before,
+.paginationNext:hover::before {
+  opacity: 1;
 }
 
 .paginationPrev {
-  display: inline-block;
-  width: 36px;
-  height: 40px;
-  border: 0;
-  background-image: url('data:image/svg+xml;utf8,<svg width="7" height="10" viewBox="0 0 7 10" xmlns="http://www.w3.org/2000/svg"><path d="M5.667 1c.094 0 .188.04.254.118.12.14.102.35-.038.47L1.85 5l4.032 3.412c.14.12.158.33.04.47-.12.14-.33.158-.47.04L1.117 5.254C1.043 5.19 1 5.098 1 5s.043-.19.118-.255L5.45 1.08c.064-.054.14-.08.217-.08" stroke="%23FFF" fill="%23FFF" fill-rule="evenodd"/></svg>');
-  background-position: center;
-  border-bottom-left-radius: inherit;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: var(--transitionStyleButton);
-
-  &:hover {
-    opacity: 1;
-  }
+  background-image: url('data:image/svg+xml;utf8,<svg width="12" height="18" viewBox="0 0 12 18" xmlns="http://www.w3.org/2000/svg"><path d="M10 2L2 9l8 7" stroke="%23FFF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 }
 
 .paginationNext {
-  display: inline-block;
-  width: 36px;
-  height: 40px;
-  border: 0;
-  background-image: url('data:image/svg+xml;utf8,<svg width="7" height="10" viewBox="0 0 7 10" xmlns="http://www.w3.org/2000/svg"><path d="M1.333 9c-.094 0-.188-.04-.254-.118-.12-.14-.102-.35.038-.47L5.15 5 1.118 1.588c-.14-.12-.158-.33-.04-.47.12-.14.33-.158.47-.04l4.334 3.667C5.957 4.81 6 4.902 6 5s-.043.19-.118.255L1.55 8.92c-.064.054-.14.08-.217.08" stroke="%23FFF" fill="%23FFF" fill-rule="evenodd"/></svg>');
-  background-position: center;
-  border-bottom-right-radius: inherit;
-  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg width="12" height="18" viewBox="0 0 12 18" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l8 7-8 7" stroke="%23FFF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+}
 
-  opacity: 0.5;
-  transition: var(--transitionStyleButton);
+.paginationPrev:hover,
+.paginationNext:hover {
+  opacity: 1;
+}
 
-  &:hover {
-    opacity: 1;
-  }
+.paginationPrev:active,
+.paginationNext:active {
+  transform: scale(0.95);
 }
 
 .caretShadow {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(0, 0, 0, 0.1);
   position: absolute;
-  bottom: -3px;
+  bottom: -9px;
   left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
-
-  /* Caret should have same box-shadow as label */
-  box-shadow: var(--boxShadowPopupLight);
+  margin-left: -10px;
+  filter: blur(2px);
 }
 
 .caret {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--colorWhite);
   position: absolute;
-  bottom: -3px;
+  bottom: -10px;
   left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
-
-  /* Caret should have same bg-color and border as label */
-  background-color: var(--colorWhite);
-  border-right-style: solid;
-  border-right-color: var(--colorGrey100);
-  border-right-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: var(--colorGrey100);
-  border-bottom-width: 1px;
+  margin-left: -10px;
 }
 
 .caretWithCarousel {
-  background-color: var(--marketplaceColor);
-  border-right-color: var(--marketplaceColor);
-  border-bottom-color: var(--marketplaceColor);
+  border-top-color: var(--marketplaceColor);
 }
 
 .borderRadiusInheritTop {

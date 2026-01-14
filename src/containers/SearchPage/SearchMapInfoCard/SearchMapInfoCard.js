@@ -11,18 +11,11 @@ import { AspectRatioWrapper, ResponsiveImage, ListingCardThumbnail } from '../..
 
 import css from './SearchMapInfoCard.module.css';
 
-// ListingCard is the listing info without overlayview or carousel controls
+// @r7avi - ListingCard shows image and name only for civil contractors marketplace
 const ListingCard = props => {
   const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
-  const { title, price, publicData } = listing.attributes;
-  const { cardStyle } = publicData || {};
-  const formattedPrice =
-    price && price.currency === config.currency
-      ? formatMoney(intl, price)
-      : price?.currency
-      ? price.currency
-      : null;
+  const { title, publicData } = listing.attributes;
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
   const {
@@ -33,27 +26,6 @@ const ListingCard = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
-
-  const pricePerUnit = intl.formatMessage(
-    { id: 'SearchMapInfoCard.perUnit' },
-    { unitType: publicData?.unitType }
-  );
-  const priceValue = formattedPrice ? formattedPrice : '';
-
-  const validListingTypes = config.listing.listingTypes;
-  const foundListingTypeConfig = validListingTypes.find(
-    conf => conf.listingType === publicData?.listingType
-  );
-  const showListingImage = requireListingImage(foundListingTypeConfig);
-  const isPriceVariationsInUse = isPriceVariationsEnabled(publicData, foundListingTypeConfig);
-  const hasMultiplePriceVariants = isPriceVariationsInUse && publicData?.priceVariants?.length > 1;
-
-  const priceMessage = hasMultiplePriceVariants
-    ? intl.formatMessage(
-        { id: 'SearchMapInfoCard.priceStartingFrom' },
-        { priceValue, pricePerUnit }
-      )
-    : intl.formatMessage({ id: 'SearchMapInfoCard.price' }, { priceValue, pricePerUnit });
 
   // listing card anchor needs sometimes inherited border radius.
   const classes = classNames(
@@ -79,7 +51,8 @@ const ListingCard = props => {
           [css.borderRadiusInheritBottom]: !isInCarousel,
         })}
       >
-        {showListingImage ? (
+        {/* @r7avi - Show image if available */}
+        {firstImage ? (
           <AspectRatioWrapper
             className={css.aspectRatioWrapper}
             width={aspectWidth}
@@ -95,19 +68,13 @@ const ListingCard = props => {
             />
           </AspectRatioWrapper>
         ) : (
-          <ListingCardThumbnail
-            style={cardStyle}
-            listingTitle={title}
-            className={css.aspectRatioWrapper}
-            width={aspectWidth}
-            height={aspectHeight}
-          />
-        )}
-        <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
-          <div className={classNames(css.price, { [css.noPriceSetLabel]: !formattedPrice })}>
-            {priceMessage}
+          <div className={css.noImagePlaceholder}>
+            <span className={css.noImageText}>No Image</span>
           </div>
-          <div className={css.name}>{title}</div>
+        )}
+        {/* @r7avi - Show only listing name */}
+        <div className={css.nameOnly}>
+          <div className={css.listingName}>{title}</div>
         </div>
       </div>
     </a>

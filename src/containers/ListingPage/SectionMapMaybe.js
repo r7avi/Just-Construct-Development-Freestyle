@@ -21,7 +21,8 @@ import css from './ListingPage.module.css';
 class SectionMapMaybe extends Component {
   constructor(props) {
     super(props);
-    this.state = { isStatic: true };
+    // @r7avi - Always show interactive map instead of static image
+    this.state = { isStatic: false };
   }
 
   render() {
@@ -45,18 +46,8 @@ class SectionMapMaybe extends Component {
         <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
           <FormattedMessage id="ListingPage.locationTitle" />
         </Heading>
-        {this.state.isStatic ? (
-          <button
-            className={css.map}
-            onClick={() => {
-              this.setState({ isStatic: false });
-            }}
-          >
-            {map}
-          </button>
-        ) : (
-          <div className={css.map}>{map}</div>
-        )}
+        {/* @r7avi - Always show interactive map */}
+        <div className={css.map}>{map}</div>
       </section>
     );
   }
