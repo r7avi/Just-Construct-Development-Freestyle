@@ -474,7 +474,8 @@ class SearchMapWithGoogleMaps extends Component {
       const { bounds, center = new sdkTypes.LatLng(0, 0), zoom = 11 } = this.props;
       const maps = window.google.maps;
       const controlPosition = maps.ControlPosition.LEFT_TOP;
-      const zoomOutToShowEarth = { zoom: 1, center: { lat: 0, lng: 0 } };
+      // @r7avi - Default map view to India instead of world map
+      const zoomOutToShowEarth = { zoom: 5, center: { lat: 20.5937, lng: 78.9629 } };
       const zoomAndCenter = !bounds && !center ? zoomOutToShowEarth : { zoom, center };
 
       const mapConfig = {

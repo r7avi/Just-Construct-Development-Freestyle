@@ -616,7 +616,7 @@ export const listingTypes = [
       unitType: 'inquiry',
     },
     defaultListingFields: {
-      price: true,
+      price: false,
       location: true,
       shipping: false,
       pickup: false,
@@ -632,7 +632,7 @@ export const listingTypes = [
       unitType: 'inquiry',
     },
     defaultListingFields: {
-      price: true,
+      price: false,
       location: true,
       shipping: false,
       pickup: false,
@@ -648,7 +648,7 @@ export const listingTypes = [
       unitType: 'inquiry',
     },
     defaultListingFields: {
-      price: true,
+      price: false,
       location: true,
       shipping: false,
       pickup: false,
@@ -664,7 +664,7 @@ export const listingTypes = [
       unitType: 'inquiry',
     },
     defaultListingFields: {
-      price: true,
+      price: false,
       location: true,
       shipping: false,
       pickup: false,
