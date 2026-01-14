@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form as FinalForm } from 'react-final-form';
+import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
@@ -34,7 +34,10 @@ const SignupFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
-    initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
+    initialValues={{ 
+      userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes),
+      phoneNumber: '+91' // @r7avi - Initialize phone number with +91 prefix
+    }}
     render={formRenderProps => {
       const {
         rootClassName,
@@ -209,9 +212,25 @@ const SignupFormComponent = props => (
 
           {showCustomUserFields ? (
             <div className={css.customFields}>
-              {userFieldProps.map(({ key, ...fieldProps }) => (
-                <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
-              ))}
+              <FormSpy subscription={{ values: true }}>
+                {({ values: formValues }) => {
+                  // @r7avi - Check if civil engineer is selected
+                  const isCivilEngineer = formValues?.['pub_is-civil-engineer'] === 'yes';
+                  
+                  return (
+                    <>
+                      {userFieldProps.map(({ key, ...fieldProps }) => {
+                        // @r7avi - Conditional display: Show engineer-grade only if is-civil-engineer is 'yes'
+                        if (key === 'pub_engineer-grade' && !isCivilEngineer) {
+                          return null;
+                        }
+                        
+                        return <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />;
+                      })}
+                    </>
+                  );
+                }}
+              </FormSpy>
             </div>
           ) : null}
 

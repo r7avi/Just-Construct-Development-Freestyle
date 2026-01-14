@@ -200,6 +200,7 @@ const EditListingWizardTab = props => {
         <EditListingDetailsPanel
           {...panelProps(DETAILS)}
           onListingTypeChange={onListingTypeChange}
+          currentUser={props.currentUser}
           config={config}
         />
       );

@@ -37,110 +37,7 @@
  */
 // @r7avi - Civil Contractors & Engineers Marketplace - User Fields Configuration
 export const userFields = [
-  {
-    key: 'user-role',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: 'civil-engineer', label: 'Civil Engineer' },
-      { option: 'customer', label: 'Customer' },
-      { option: 'contractor', label: 'Civil Contractor' },
-      { option: 'architect', label: 'Architect' },
-      { option: 'interior-designer', label: 'Interior Designer' },
-      { option: 'project-supervisor', label: 'Project Supervisor' },
-      { option: 'skilled-worker', label: 'Skilled Worker' },
-    ],
-    userTypeConfig: {
-      limitToUserTypeIds: false,
-    },
-    showConfig: {
-      label: 'Role',
-      displayInProfile: true,
-    },
-    saveConfig: {
-      label: 'Your Role',
-      placeholderMessage: 'Select your role',
-      displayInSignUp: true,
-      isRequired: true,
-      requiredMessage: 'Please select your role',
-    },
-  },
-  {
-    key: 'company-name',
-    scope: 'public',
-    schemaType: 'text',
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['provider'],
-    },
-    showConfig: {
-      label: 'Company Name',
-      displayInProfile: true,
-    },
-    saveConfig: {
-      label: 'Company Name',
-      placeholderMessage: 'Enter company name',
-      displayInSignUp: false,
-      isRequired: false,
-    },
-  },
-  {
-    key: 'registration-number',
-    scope: 'private',
-    schemaType: 'text',
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['provider'],
-    },
-    showConfig: {
-      label: 'Registration Number',
-      displayInProfile: false,
-    },
-    saveConfig: {
-      label: 'Business Registration Number',
-      placeholderMessage: 'Enter registration number',
-      displayInSignUp: false,
-      isRequired: false,
-    },
-  },
-  {
-    key: 'gst-number',
-    scope: 'private',
-    schemaType: 'text',
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['provider'],
-    },
-    showConfig: {
-      label: 'GST Number',
-      displayInProfile: false,
-    },
-    saveConfig: {
-      label: 'GST Number',
-      placeholderMessage: 'Enter GST number',
-      displayInSignUp: false,
-      isRequired: false,
-    },
-  },
-  {
-    key: 'professional-license',
-    scope: 'public',
-    schemaType: 'text',
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['provider'],
-    },
-    showConfig: {
-      label: 'Professional License Number',
-      displayInProfile: true,
-    },
-    saveConfig: {
-      label: 'Professional License Number',
-      placeholderMessage: 'Enter license number',
-      displayInSignUp: false,
-      isRequired: false,
-    },
-  },
+  // @r7avi - Phone field handled separately by UserFieldPhoneNumber component
   {
     key: 'state',
     scope: 'public',
@@ -194,7 +91,7 @@ export const userFields = [
   {
     key: 'city',
     scope: 'public',
-    schemaType: 'text',
+    schemaType: 'short-text',
     userTypeConfig: {
       limitToUserTypeIds: false,
     },
@@ -208,6 +105,222 @@ export const userFields = [
       displayInSignUp: true,
       isRequired: true,
       requiredMessage: 'Please enter your city',
+    },
+  },
+  {
+    key: 'address',
+    scope: 'public',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: false,
+    },
+    showConfig: {
+      label: 'Address',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Address',
+      placeholderMessage: 'Enter your address',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please enter your address',
+    },
+  },
+  {
+    key: 'pincode',
+    scope: 'public',
+    schemaType: 'long',
+    minimum: 100000,
+    maximum: 999999,
+    userTypeConfig: {
+      limitToUserTypeIds: false,
+    },
+    showConfig: {
+      label: 'Pincode',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Pincode',
+      placeholderMessage: 'Enter 6-digit pincode',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please enter your pincode',
+    },
+  },
+  {
+    key: 'is-civil-engineer',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'yes', label: 'Yes' },
+      { option: 'no', label: 'No' },
+    ],
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['customer'],
+    },
+    showConfig: {
+      label: 'Are you a Civil Engineer?',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Are you a Civil Engineer?',
+      placeholderMessage: 'Select...',
+      displayInSignUp: true,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'engineer-grade',
+    scope: 'public',
+    schemaType: 'short-text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['customer'],
+    },
+    showConfig: {
+      label: 'Engineer Grade/License',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Engineer Grade/License Number',
+      placeholderMessage: 'Enter your grade or license number',
+      displayInSignUp: true,
+      isRequired: false,
+      // @r7avi - This field will be conditionally shown in SignupForm based on is-civil-engineer value
+    },
+  },
+  {
+    key: 'provider-type',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'skilled-worker', label: 'Skilled Worker' },
+      { option: 'civil-contractor', label: 'Civil Contractor' },
+      { option: 'construction-company', label: 'Construction Company' },
+      { option: 'civil-engineer', label: 'Civil Engineer' },
+      { option: 'architect', label: 'Architect' },
+      { option: 'interior-designer', label: 'Interior Designer' },
+    ],
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Provider Type',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'What type of service do you provide?',
+      placeholderMessage: 'Select provider type',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please select your provider type',
+    },
+  },
+  {
+    key: 'skilled-worker-category',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'plumbing', label: 'Plumbing' },
+      { option: 'electrical', label: 'Electrical' },
+      { option: 'painting', label: 'Painting' },
+      { option: 'carpentry', label: 'Carpentry' },
+      { option: 'hvac', label: 'HVAC' },
+      { option: 'roofing', label: 'Roofing' },
+      { option: 'masonry', label: 'Masonry' },
+      { option: 'welding', label: 'Welding' },
+    ],
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Skilled Worker Category',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Skilled Worker Category (if applicable)',
+      placeholderMessage: 'Select your specialty',
+      displayInSignUp: true,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'gst-number',
+    scope: 'private',
+    schemaType: 'short-text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'GST Number',
+      displayInProfile: false,
+    },
+    saveConfig: {
+      label: 'GST Number',
+      placeholderMessage: 'Enter GST number (if applicable)',
+      displayInSignUp: true,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'company-name',
+    scope: 'public',
+    schemaType: 'short-text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Company Name',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Company Name (if applicable)',
+      placeholderMessage: 'Enter company name',
+      displayInSignUp: true,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'registration-number',
+    scope: 'private',
+    schemaType: 'short-text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Registration Number',
+      displayInProfile: false,
+    },
+    saveConfig: {
+      label: 'Business Registration Number (if applicable)',
+      placeholderMessage: 'Enter registration number',
+      displayInSignUp: true,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'professional-license',
+    scope: 'public',
+    schemaType: 'short-text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Professional License Number',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Professional License Number (if applicable)',
+      placeholderMessage: 'Enter license number',
+      displayInSignUp: true,
+      isRequired: false,
     },
   },
   {
@@ -250,9 +363,19 @@ export const userTypes = [
   {
     userType: 'customer',
     label: 'Customer',
+    // @r7avi - Enable phone number in signup
+    phoneNumberSettings: {
+      displayInSignUp: true,
+      required: true,
+    },
   },
   {
     userType: 'provider',
     label: 'Provider',
+    // @r7avi - Enable phone number in signup
+    phoneNumberSettings: {
+      displayInSignUp: true,
+      required: true,
+    },
   },
 ];

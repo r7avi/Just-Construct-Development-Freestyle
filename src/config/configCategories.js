@@ -6,14 +6,17 @@
 /**
  * Listing categories configuration
  * Categories can have nested subcategories
+ * Categories can be filtered by listing type
  * 
  * Structure:
  * - id: Unique identifier for the category
  * - name: Display name for the category
+ * - listingTypes: Array of listing type IDs this category applies to (optional, if omitted applies to all)
  * - subcategories: Array of nested subcategories (optional)
  */
 
-export const categories = [
+// @r7avi - Provider categories (what services they offer)
+export const providerCategories = [
   {
     id: 'cat_civil_structure',
     name: 'Civil & Structural Works',
@@ -88,4 +91,88 @@ export const categories = [
       },
     ],
   },
+];
+
+// @r7avi - Customer categories (what services they need)
+export const customerCategories = [
+  {
+    id: 'cat_need_construction',
+    name: 'Construction & Building',
+    subcategories: [
+      {
+        id: 'sub_need_new_building',
+        name: 'New Building/Home Construction',
+      },
+      {
+        id: 'sub_need_renovation',
+        name: 'Renovation & Remodeling',
+      },
+      {
+        id: 'sub_need_repairs',
+        name: 'Repairs & Maintenance',
+      },
+      {
+        id: 'sub_need_extension',
+        name: 'Building Extension',
+      },
+    ],
+  },
+  {
+    id: 'cat_need_trades',
+    name: 'Skilled Trade Services',
+    subcategories: [
+      {
+        id: 'sub_need_plumbing',
+        name: 'Plumbing Services',
+      },
+      {
+        id: 'sub_need_electrical',
+        name: 'Electrical Services',
+      },
+      {
+        id: 'sub_need_painting',
+        name: 'Painting Services',
+      },
+      {
+        id: 'sub_need_carpentry',
+        name: 'Carpentry Services',
+      },
+      {
+        id: 'sub_need_hvac',
+        name: 'HVAC Services',
+      },
+      {
+        id: 'sub_need_roofing',
+        name: 'Roofing Services',
+      },
+    ],
+  },
+  {
+    id: 'cat_need_design',
+    name: 'Design & Planning Services',
+    subcategories: [
+      {
+        id: 'sub_need_architecture',
+        name: 'Architectural Design',
+      },
+      {
+        id: 'sub_need_interior',
+        name: 'Interior Design',
+      },
+      {
+        id: 'sub_need_landscape',
+        name: 'Landscape Design',
+      },
+      {
+        id: 'sub_need_engineering',
+        name: 'Engineering Consultation',
+      },
+    ],
+  },
+];
+
+// @r7avi - Combined categories with listing type filtering
+export const categories = [
+  ...providerCategories.map(cat => ({ ...cat, listingTypes: ['type_provider'] })),
+  ...customerCategories.map(cat => ({ ...cat, listingTypes: ['type_customer'] })),
 ];

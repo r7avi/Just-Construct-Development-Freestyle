@@ -733,7 +733,8 @@ const validUserSaveConfig = config => {
 const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
   const scopeOptions = ['public', 'private'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+  // @r7avi - Added 'short-text' for single-line text inputs
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl', 'short-text'];
 
   return listingFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
@@ -802,7 +803,8 @@ const validUserTypes = userTypes => {
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
   const scopeOptions = ['public', 'private', 'protected', 'metadata'];
-  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl'];
+  // @r7avi - Added 'short-text' for single-line text inputs
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean', 'youtubeVideoUrl', 'short-text'];
 
   return userFields.reduce((acc, data) => {
     const schemaType = data.schemaType;

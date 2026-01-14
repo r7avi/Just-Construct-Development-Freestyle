@@ -9,6 +9,7 @@ import {
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
   SCHEMA_TYPE_YOUTUBE,
+  SCHEMA_TYPE_SHORT_TEXT,
 } from '../../util/types';
 import {
   required,
@@ -106,6 +107,30 @@ const CustomFieldText = props => {
   );
 };
 
+// @r7avi - Added CustomFieldShortText for single-line text inputs
+const CustomFieldShortText = props => {
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+
+  return (
+    <FieldTextInput
+      className={css.customField}
+      id={formId ? `${formId}.${name}` : name}
+      name={name}
+      type="text"
+      label={label}
+      placeholder={placeholder}
+      {...validateMaybe}
+    />
+  );
+};
+
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { minimum, maximum, saveConfig } = fieldConfig;
@@ -130,6 +155,9 @@ const CustomFieldLong = props => {
       : validateInteger(value, max, min, numberTooSmallMessage, numberTooBigMessage);
   };
 
+  // @r7avi - Calculate maxLength based on maximum value (for pincode: 999999 = 6 digits)
+  const maxLength = maximum ? String(maximum).length : undefined;
+
   return (
     <FieldTextInput
       className={css.customField}
@@ -137,6 +165,7 @@ const CustomFieldLong = props => {
       name={name}
       type="number"
       step="1"
+      maxLength={maxLength}
       parse={value => {
         const parsed = Number.parseInt(value, 10);
         return Number.isNaN(parsed) ? null : parsed;
@@ -235,6 +264,8 @@ const CustomExtendedDataField = props => {
     ? renderFieldComponent(CustomFieldMultiEnum, props)
     : schemaType === SCHEMA_TYPE_TEXT
     ? renderFieldComponent(CustomFieldText, props)
+    : schemaType === SCHEMA_TYPE_SHORT_TEXT
+    ? renderFieldComponent(CustomFieldShortText, props)
     : schemaType === SCHEMA_TYPE_LONG
     ? renderFieldComponent(CustomFieldLong, props)
     : schemaType === SCHEMA_TYPE_BOOLEAN

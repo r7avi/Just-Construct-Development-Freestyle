@@ -1,11 +1,25 @@
 import React from 'react';
 import classNames from 'classnames';
+import { Field } from 'react-final-form';
 
 import { intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import * as validators from '../../util/validators';
 
 import { FieldPhoneNumberInput } from '../../components';
+
+// @r7avi - Indian phone number validation
+const validateIndianPhone = message => value => {
+  if (!value) return undefined;
+  
+  // Remove +91, spaces, and hyphens
+  const cleaned = value.replace(/^\+91[-\s]?/, '').replace(/[-\s]/g, '');
+  
+  // Check if it's exactly 10 digits and starts with 6-9
+  const isValid = /^[6-9]\d{9}$/.test(cleaned);
+  
+  return isValid ? undefined : message;
+};
 
 /**
  * A component that renders the phone number field.
@@ -32,29 +46,38 @@ const UserFieldPhoneNumber = props => {
   }
 
   const isRequired = required === true;
-  const validateMaybe = isRequired
-    ? {
-        validate: validators.required(
+  
+  // @r7avi - Add Indian phone validation
+  const phoneValidators = isRequired
+    ? validators.composeValidators(
+        validators.required(
           intl.formatMessage({
             id: `${formName}.phoneNumberRequired`,
           })
         ),
-      }
-    : {};
+        validateIndianPhone(
+          intl.formatMessage({
+            id: `${formName}.phoneNumberInvalid`,
+          }, { default: 'Please enter a valid 10-digit Indian mobile number' })
+        )
+      )
+    : validateIndianPhone(
+        intl.formatMessage({
+          id: `${formName}.phoneNumberInvalid`,
+        }, { default: 'Please enter a valid 10-digit Indian mobile number' })
+      );
 
   return (
     <FieldPhoneNumberInput
       className={classNames(className, { [rootClassName]: !!rootClassName })}
-      type="text"
+      type="tel"
       id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
       name="phoneNumber"
       label={intl.formatMessage({
         id: `${formName}.phoneNumberLabel`,
       })}
-      placeholder={intl.formatMessage({
-        id: `${formName}.phoneNumberPlaceholder`,
-      })}
-      {...validateMaybe}
+      placeholder="+91-XXXXXXXXXX"
+      validate={phoneValidators}
     />
   );
 };

@@ -74,7 +74,7 @@ export const listingFields = [
   },
   {
     key: 'phoneNumber',
-    scope: 'public',
+    scope: 'private', // @r7avi - Private scope so phone number is only visible to transaction participants
     schemaType: 'text',
     listingTypeConfig: {
       limitToListingTypeIds: false,
@@ -170,7 +170,7 @@ export const listingFields = [
     },
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['type_contractors_engineers'],
+      listingTypeIds: ['type_provider'],
     },
     filterConfig: {
       indexForSearch: true,
@@ -259,7 +259,7 @@ export const listingFields = [
     schemaType: 'text',
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['type_contractors_engineers'],
+      listingTypeIds: ['type_provider'],
     },
     showConfig: {
       label: 'Portfolio/Website URL',
@@ -476,7 +476,7 @@ export const listingFields = [
 // @r7avi - Civil Contractors & Engineers Marketplace - Listing Types Configuration
 export const listingTypes = [
   {
-    listingType: 'type_contractors_engineers',
+    listingType: 'type_provider',
     label: 'Contractors & Engineers',
     transactionType: {
       process: 'default-negotiation',

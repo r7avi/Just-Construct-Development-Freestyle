@@ -49,6 +49,8 @@ export const SCHEMA_TYPE_TEXT = 'text';
 export const SCHEMA_TYPE_LONG = 'long';
 export const SCHEMA_TYPE_BOOLEAN = 'boolean';
 export const SCHEMA_TYPE_YOUTUBE = 'youtubeVideoUrl';
+// @r7avi - Added short-text type for single-line text inputs
+export const SCHEMA_TYPE_SHORT_TEXT = 'short-text';
 export const EXTENDED_DATA_SCHEMA_TYPES = [
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
@@ -56,6 +58,7 @@ export const EXTENDED_DATA_SCHEMA_TYPES = [
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
   SCHEMA_TYPE_YOUTUBE,
+  SCHEMA_TYPE_SHORT_TEXT,
 ];
 
 const propTypes = {};

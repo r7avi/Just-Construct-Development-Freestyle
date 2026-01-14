@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
 // Import util modules
@@ -265,6 +265,7 @@ const getInitialValues = (
  * @param {boolean} props.updateInProgress - Whether the update is in progress
  * @param {Object} props.errors - The errors object
  * @param {Object} props.config - The config object
+ * @param {Object} props.currentUser - The current user object
  * @returns {JSX.Element}
  */
 const EditListingDetailsPanel = props => {
@@ -281,6 +282,7 @@ const EditListingDetailsPanel = props => {
     updateInProgress,
     errors,
     config,
+    currentUser,
     updatePageTitle: UpdatePageTitle,
     intl,
   } = props;
@@ -292,10 +294,55 @@ const EditListingDetailsPanel = props => {
   const listingCategories = config.categoryConfiguration.categories;
   const categoryKey = config.categoryConfiguration.key;
 
+  // @r7avi - Track selected listing type for dynamic category filtering
+  const [selectedListingType, setSelectedListingType] = useState(publicData?.listingType);
+
+  // @r7avi - Filter categories by listing type
+  const filteredCategories = selectedListingType
+    ? listingCategories.filter(cat => 
+        !cat.listingTypes || cat.listingTypes.includes(selectedListingType)
+      )
+    : listingCategories;
+
+  // @r7avi - Wrap onListingTypeChange to update selected listing type
+  const handleListingTypeChange = (listingTypeInfo) => {
+    setSelectedListingType(listingTypeInfo.listingType);
+    if (onListingTypeChange) {
+      onListingTypeChange(listingTypeInfo);
+    }
+  };
+
+  // @r7avi - Filter listing types based on user type
+  // Customer type → can create 'type_customer' listings (Reverse flow - request services)
+  // Provider type → can create 'type_provider' listings (Regular flow - offer services)
+  const userProfile = currentUser?.attributes?.profile;
+  
+  // Check for userType in publicData
+  const userType = userProfile?.publicData?.userType || 
+                   userProfile?.protectedData?.userType ||
+                   userProfile?.privateData?.userType;
+  
+  // Determine listing type based on user type
+  const isCustomer = userType === 'customer';
+  const isProvider = userType === 'provider';
+  
+  const filteredListingTypes = listingTypes.filter(conf => {
+    // Customer type can only create customer listings (reverse flow)
+    if (isCustomer) {
+      return conf.listingType === 'type_customer';
+    }
+    // Provider type can only create contractor/engineer listings (regular flow)
+    if (isProvider) {
+      return conf.listingType === 'type_provider';
+    }
+    // If no user type is set yet, show all listing types
+    return true;
+  });
+
   const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
   const hasValidExistingListingType =
     hasExistingListingType &&
-    !!listingTypes.find(conf => {
+    !!filteredListingTypes.find(conf => {
       const listinTypesMatch = conf.listingType === existingListingTypeInfo.listingType;
       const unitTypesMatch = conf.transactionType?.unitType === existingListingTypeInfo.unitType;
       return listinTypesMatch && unitTypesMatch;
@@ -304,14 +351,14 @@ const EditListingDetailsPanel = props => {
   const initialValues = getInitialValues(
     props,
     existingListingTypeInfo,
-    listingTypes,
+    filteredListingTypes,
     listingFields,
     listingCategories,
     categoryKey
   );
 
-  const noListingTypesSet = listingTypes?.length === 0;
-  const hasListingTypesSet = listingTypes?.length > 0;
+  const noListingTypesSet = filteredListingTypes?.length === 0;
+  const hasListingTypesSet = filteredListingTypes?.length > 0;
   const canShowEditListingDetailsForm =
     hasListingTypesSet && (!hasExistingListingType || hasValidExistingListingType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
@@ -392,14 +439,14 @@ const EditListingDetailsPanel = props => {
 
             onSubmit(updateValues);
           }}
-          selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
+          selectableListingTypes={filteredListingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
-          selectableCategories={listingCategories}
+          selectableCategories={filteredCategories}
           pickSelectedCategories={values =>
-            pickCategoryFields(values, categoryKey, 1, listingCategories)
+            pickCategoryFields(values, categoryKey, 1, filteredCategories)
           }
           categoryPrefix={categoryKey}
-          onListingTypeChange={onListingTypeChange}
+          onListingTypeChange={handleListingTypeChange}
           listingFieldsConfig={listingFields}
           listingCurrency={listing?.attributes?.price?.currency}
           marketplaceCurrency={config.currency}
