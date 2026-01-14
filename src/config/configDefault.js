@@ -6,6 +6,8 @@ import * as branding from './configBranding';
 import * as layout from './configLayout';
 import * as analytics from './configAnalytics';
 import * as user from './configUser';
+// @r7avi - Import categories configuration
+import * as categoryConfig from './configCategories';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -45,6 +47,9 @@ const defaultConfig = {
 
   // Modify listing extended data and listing type in configListing.js
   listing,
+
+  // @r7avi - Add categories configuration
+  categories: categoryConfig.categories,
 
   user,
   // Modify search settings data in configSearch.js

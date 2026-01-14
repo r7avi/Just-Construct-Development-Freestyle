@@ -54,6 +54,112 @@
  */
 // @r7avi - Civil Contractors & Engineers Marketplace - Listing Fields Configuration
 export const listingFields = [
+  // @r7avi - Private fields for bulk upload data
+  {
+    key: 'website',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Website',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Website URL',
+      placeholderMessage: 'https://example.com',
+      isRequired: false,
+    },
+  },
+  {
+    key: 'phoneNumber',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Phone Number',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Contact Phone',
+      placeholderMessage: '+91-XXXXXXXXXX',
+      isRequired: true,
+      requiredMessage: 'Please enter phone number',
+    },
+  },
+  {
+    key: 'address',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Address',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Business Address',
+      placeholderMessage: 'Enter full address',
+      isRequired: true,
+      requiredMessage: 'Please enter address',
+    },
+  },
+  {
+    key: 'googleLink',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Google Maps Link',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Google Maps/Business Link',
+      placeholderMessage: 'https://maps.google.com/...',
+      isRequired: false,
+    },
+  },
+  {
+    key: 'type',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Business Type',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Type of Business/Service',
+      placeholderMessage: 'e.g., Construction Company, Civil Engineer',
+      isRequired: true,
+      requiredMessage: 'Please enter business type',
+    },
+  },
+  {
+    key: 'pincode',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: false,
+    },
+    showConfig: {
+      label: 'Pincode',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Pincode',
+      placeholderMessage: 'Enter pincode',
+      isRequired: false,
+    },
+  },
   {
     key: 'experience-years',
     scope: 'public',
@@ -64,7 +170,7 @@ export const listingFields = [
     },
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['civil-engineers', 'construction-company', 'skilled-workers'],
+      listingTypeIds: ['type_contractors_engineers'],
     },
     filterConfig: {
       indexForSearch: true,
@@ -78,211 +184,10 @@ export const listingFields = [
     saveConfig: {
       label: 'Years of Experience',
       placeholderMessage: 'Enter years of experience',
-      isRequired: true,
-      requiredMessage: 'Please enter years of experience',
-    },
-  },
-  {
-    key: 'certifications',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'pe-license', label: 'Professional Engineer (PE) License' },
-      { option: 'pmp', label: 'Project Management Professional (PMP)' },
-      { option: 'leed', label: 'LEED Certification' },
-      { option: 'osha', label: 'OSHA Safety Certification' },
-      { option: 'coa', label: 'Council of Architecture (COA)' },
-      { option: 'ncidq', label: 'NCIDQ Certification' },
-      { option: 'iti', label: 'ITI Certification' },
-      { option: 'other', label: 'Other Certifications' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['civil-engineers', 'construction-company', 'skilled-workers'],
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectMultipleFilter',
-      label: 'Certifications',
-      searchMode: 'has_any',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Certifications',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Certifications',
-      placeholderMessage: 'Select certifications',
       isRequired: false,
     },
   },
-  {
-    key: 'specialization',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'structural-engineering', label: 'Structural Engineering' },
-      { option: 'geotechnical', label: 'Geotechnical Engineering' },
-      { option: 'transportation', label: 'Transportation Engineering' },
-      { option: 'water-resources', label: 'Water Resources' },
-      { option: 'environmental', label: 'Environmental Engineering' },
-      { option: 'construction-management', label: 'Construction Management' },
-      { option: 'quantity-surveying', label: 'Quantity Surveying' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['civil-engineers'],
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectMultipleFilter',
-      label: 'Specialization',
-      searchMode: 'has_any',
-      group: 'primary',
-    },
-    showConfig: {
-      label: 'Specialization',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Specialization',
-      placeholderMessage: 'Select specializations',
-      isRequired: true,
-      requiredMessage: 'Please select at least one specialization',
-    },
-  },
-  {
-    key: 'company-size',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: '1-10', label: '1-10 employees' },
-      { option: '11-50', label: '11-50 employees' },
-      { option: '51-200', label: '51-200 employees' },
-      { option: '201-500', label: '201-500 employees' },
-      { option: '500-plus', label: '500+ employees' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['construction-company'],
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectSingleFilter',
-      label: 'Company Size',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Company Size',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Company Size',
-      placeholderMessage: 'Select company size',
-      isRequired: true,
-      requiredMessage: 'Please select company size',
-    },
-  },
-  {
-    key: 'project-types',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'residential', label: 'Residential' },
-      { option: 'commercial', label: 'Commercial' },
-      { option: 'industrial', label: 'Industrial' },
-      { option: 'infrastructure', label: 'Infrastructure' },
-      { option: 'renovation', label: 'Renovation' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['construction-company', 'civil-engineers'],
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectMultipleFilter',
-      label: 'Project Types',
-      searchMode: 'has_any',
-      group: 'primary',
-    },
-    showConfig: {
-      label: 'Project Types',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Project Types Handled',
-      placeholderMessage: 'Select project types',
-      isRequired: true,
-      requiredMessage: 'Please select at least one project type',
-    },
-  },
-  {
-    key: 'trade-specialty',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: 'carpenter', label: 'Carpenter' },
-      { option: 'electrician', label: 'Electrician' },
-      { option: 'plumber', label: 'Plumber' },
-      { option: 'painter', label: 'Painter' },
-      { option: 'mason', label: 'Mason' },
-      { option: 'welder', label: 'Welder' },
-      { option: 'hvac-technician', label: 'HVAC Technician' },
-      { option: 'tile-worker', label: 'Tile Worker' },
-      { option: 'roofer', label: 'Roofer' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['skilled-workers'],
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectSingleFilter',
-      label: 'Trade Specialty',
-      group: 'primary',
-    },
-    showConfig: {
-      label: 'Trade Specialty',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Trade Specialty',
-      placeholderMessage: 'Select your trade',
-      isRequired: true,
-      requiredMessage: 'Please select your trade specialty',
-    },
-  },
-  {
-    key: 'availability',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: 'immediate', label: 'Immediate' },
-      { option: 'within-week', label: 'Within a Week' },
-      { option: 'within-month', label: 'Within a Month' },
-      { option: 'flexible', label: 'Flexible' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: false,
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectSingleFilter',
-      label: 'Availability',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Availability',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Availability',
-      placeholderMessage: 'Select availability',
-      isRequired: true,
-      requiredMessage: 'Please select availability',
-    },
-  },
+
   {
     key: 'project-budget',
     scope: 'public',
@@ -298,7 +203,7 @@ export const listingFields = [
     ],
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['customer'],
+      listingTypeIds: ['type_customer'],
     },
     filterConfig: {
       indexForSearch: true,
@@ -329,7 +234,7 @@ export const listingFields = [
     ],
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['customer'],
+      listingTypeIds: ['type_customer'],
     },
     filterConfig: {
       indexForSearch: true,
@@ -354,7 +259,7 @@ export const listingFields = [
     schemaType: 'text',
     listingTypeConfig: {
       limitToListingTypeIds: true,
-      listingTypeIds: ['civil-engineers', 'construction-company', 'skilled-workers'],
+      listingTypeIds: ['type_contractors_engineers'],
     },
     showConfig: {
       label: 'Portfolio/Website URL',
@@ -364,43 +269,6 @@ export const listingFields = [
       label: 'Portfolio/Website URL',
       placeholderMessage: 'https://example.com',
       isRequired: false,
-    },
-  },
-  {
-    key: 'languages',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'english', label: 'English' },
-      { option: 'hindi', label: 'Hindi' },
-      { option: 'tamil', label: 'Tamil' },
-      { option: 'telugu', label: 'Telugu' },
-      { option: 'kannada', label: 'Kannada' },
-      { option: 'malayalam', label: 'Malayalam' },
-      { option: 'marathi', label: 'Marathi' },
-      { option: 'bengali', label: 'Bengali' },
-      { option: 'gujarati', label: 'Gujarati' },
-      { option: 'punjabi', label: 'Punjabi' },
-    ],
-    listingTypeConfig: {
-      limitToListingTypeIds: false,
-    },
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectMultipleFilter',
-      label: 'Languages',
-      searchMode: 'has_any',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Languages Spoken',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Languages Spoken',
-      placeholderMessage: 'Select languages',
-      isRequired: true,
-      requiredMessage: 'Please select at least one language',
     },
   },
 ];
@@ -608,12 +476,12 @@ export const listingFields = [
 // @r7avi - Civil Contractors & Engineers Marketplace - Listing Types Configuration
 export const listingTypes = [
   {
-    listingType: 'civil-engineers',
-    label: 'Civil Engineers',
+    listingType: 'type_contractors_engineers',
+    label: 'Contractors & Engineers',
     transactionType: {
-      process: 'default-inquiry',
-      alias: 'default-inquiry/release-1',
-      unitType: 'inquiry',
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'offer',
     },
     defaultListingFields: {
       price: false,
@@ -624,44 +492,12 @@ export const listingTypes = [
     },
   },
   {
-    listingType: 'customer',
+    listingType: 'type_customer',
     label: 'Customer',
     transactionType: {
-      process: 'default-inquiry',
-      alias: 'default-inquiry/release-1',
-      unitType: 'inquiry',
-    },
-    defaultListingFields: {
-      price: false,
-      location: true,
-      shipping: false,
-      pickup: false,
-      payoutDetails: false,
-    },
-  },
-  {
-    listingType: 'construction-company',
-    label: 'Construction Company',
-    transactionType: {
-      process: 'default-inquiry',
-      alias: 'default-inquiry/release-1',
-      unitType: 'inquiry',
-    },
-    defaultListingFields: {
-      price: false,
-      location: true,
-      shipping: false,
-      pickup: false,
-      payoutDetails: false,
-    },
-  },
-  {
-    listingType: 'skilled-workers',
-    label: 'Skilled Workers',
-    transactionType: {
-      process: 'default-inquiry',
-      alias: 'default-inquiry/release-1',
-      unitType: 'inquiry',
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'request',
     },
     defaultListingFields: {
       price: false,

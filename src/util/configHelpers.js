@@ -1442,6 +1442,7 @@ const hasMandatoryConfigs = hostedConfig => {
   );
 };
 
+// @r7avi - Updated to use local categories configuration
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   // Remove trailing slash from marketplaceRootURL if any
   const marketplaceRootURL = defaultConfigs.marketplaceRootURL;
@@ -1458,7 +1459,11 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     getListingMinimumPrice(configAsset.transactionSize) ||
     defaultConfigs.listingMinimumPriceSubUnits;
 
-  const validHostedCategories = validateCategoryConfig(configAsset.categories);
+  // @r7avi - Use local categories from defaultConfigs instead of hosted categories
+  const shouldUseLocalCategories = mergeDefaultTypesAndFieldsForDebugging(false);
+  const validHostedCategories = shouldUseLocalCategories 
+    ? defaultConfigs.categories || []
+    : validateCategoryConfig(configAsset.categories);
   const categoryConfiguration = getBuiltInCategorySpecs(validHostedCategories);
   const listingConfiguration = mergeListingConfig(
     configAsset,
