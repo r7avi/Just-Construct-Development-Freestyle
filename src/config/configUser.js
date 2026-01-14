@@ -35,125 +35,197 @@
  *   - userTypeIds:                   An array of user types for which the extended
  *   (optional)                       data is relevant and should be added.
  */
+// @r7avi - Civil Contractors & Engineers Marketplace - User Fields Configuration
 export const userFields = [
   {
-    key: 'cuisine',
+    key: 'user-role',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
-      { option: 'italian', label: 'Italian' },
-      { option: 'chinese', label: 'Chinese' },
-      { option: 'thai', label: 'Thai' },
+      { option: 'civil-engineer', label: 'Civil Engineer' },
+      { option: 'customer', label: 'Customer' },
+      { option: 'contractor', label: 'Civil Contractor' },
+      { option: 'architect', label: 'Architect' },
+      { option: 'interior-designer', label: 'Interior Designer' },
+      { option: 'project-supervisor', label: 'Project Supervisor' },
+      { option: 'skilled-worker', label: 'Skilled Worker' },
     ],
-    showConfig: {
-      label: 'Favorite cuisine',
-    },
-    saveConfig: {
-      label: 'Favorite cuisine',
-      displayInSignUp: true,
-      isRequired: true,
-    },
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
-    },
-  },
-  {
-    key: 'canCook',
-    scope: 'public',
-    schemaType: 'boolean',
-    showConfig: {
-      label: 'Can you cook?',
-    },
-    saveConfig: {
-      label: 'Can you cook?',
-      displayInSignUp: true,
-      isRequired: true,
-      placeholderMessage: 'Select...',
-    },
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
-    },
-  },
-  {
-    key: 'numberOfCookbooks',
-    scope: 'public',
-    schemaType: 'long',
-    showConfig: {
-      label: 'How many cookbooks do you have',
-    },
-    saveConfig: {
-      label: 'How many cookbooks do you have',
-      displayInSignUp: true,
-      isRequired: true,
-    },
-    userTypeConfig: {
-      limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
-    },
-  },
-  {
-    key: 'kitchenDescription',
-    scope: 'public',
-    schemaType: 'text',
-    showConfig: {
-      label: 'Description of your kitchen',
-    },
-    saveConfig: {
-      label: 'Description of your kitchen',
-      displayInSignUp: true,
-      isRequired: true,
-      placeholderMessage: 'Describe your kitchen...',
-    },
-    userTypeConfig: {
-      label: 'Description of your kitchen',
-      limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
-    },
-  },
-  {
-    key: 'arrivalInstructions',
-    scope: 'protected',
-    schemaType: 'text',
-    showConfig: {
-      label: 'How do people arrive at your kitchen?',
-    },
-    saveConfig: {
-      label: 'How do people arrive at your kitchen?',
-      displayInSignUp: true,
-      isRequired: true,
-    },
     userTypeConfig: {
       limitToUserTypeIds: false,
-      userTypeIds: ['a', 'b', 'c'],
+    },
+    showConfig: {
+      label: 'Role',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Your Role',
+      placeholderMessage: 'Select your role',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please select your role',
     },
   },
   {
-    key: 'dietaryPreferences',
+    key: 'company-name',
     scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'vegan', label: 'Vegan' },
-      { option: 'vegetarian', label: 'Vegetarian' },
-      { option: 'gluten-free', label: 'Gluten free' },
-      { option: 'dairy-free', label: 'Dairy free' },
-      { option: 'nut-free', label: 'Nut free' },
-      { option: 'egg-free', label: 'Egg free' },
-      { option: 'low-carb', label: 'Low carb' },
-      { option: 'low-fat', label: 'Low fat' },
-    ],
-    showConfig: {
-      label: 'Dietary preferences',
-    },
-    saveConfig: {
-      displayInSignUp: true,
-      label: 'Dietary preferences',
-      isRequired: true,
-    },
+    schemaType: 'text',
     userTypeConfig: {
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Company Name',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Company Name',
+      placeholderMessage: 'Enter company name',
+      displayInSignUp: false,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'registration-number',
+    scope: 'private',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Registration Number',
+      displayInProfile: false,
+    },
+    saveConfig: {
+      label: 'Business Registration Number',
+      placeholderMessage: 'Enter registration number',
+      displayInSignUp: false,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'gst-number',
+    scope: 'private',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'GST Number',
+      displayInProfile: false,
+    },
+    saveConfig: {
+      label: 'GST Number',
+      placeholderMessage: 'Enter GST number',
+      displayInSignUp: false,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'professional-license',
+    scope: 'public',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+    showConfig: {
+      label: 'Professional License Number',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Professional License Number',
+      placeholderMessage: 'Enter license number',
+      displayInSignUp: false,
+      isRequired: false,
+    },
+  },
+  {
+    key: 'state',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'andhra-pradesh', label: 'Andhra Pradesh' },
+      { option: 'arunachal-pradesh', label: 'Arunachal Pradesh' },
+      { option: 'assam', label: 'Assam' },
+      { option: 'bihar', label: 'Bihar' },
+      { option: 'chhattisgarh', label: 'Chhattisgarh' },
+      { option: 'goa', label: 'Goa' },
+      { option: 'gujarat', label: 'Gujarat' },
+      { option: 'haryana', label: 'Haryana' },
+      { option: 'himachal-pradesh', label: 'Himachal Pradesh' },
+      { option: 'jharkhand', label: 'Jharkhand' },
+      { option: 'karnataka', label: 'Karnataka' },
+      { option: 'kerala', label: 'Kerala' },
+      { option: 'madhya-pradesh', label: 'Madhya Pradesh' },
+      { option: 'maharashtra', label: 'Maharashtra' },
+      { option: 'manipur', label: 'Manipur' },
+      { option: 'meghalaya', label: 'Meghalaya' },
+      { option: 'mizoram', label: 'Mizoram' },
+      { option: 'nagaland', label: 'Nagaland' },
+      { option: 'odisha', label: 'Odisha' },
+      { option: 'punjab', label: 'Punjab' },
+      { option: 'rajasthan', label: 'Rajasthan' },
+      { option: 'sikkim', label: 'Sikkim' },
+      { option: 'tamil-nadu', label: 'Tamil Nadu' },
+      { option: 'telangana', label: 'Telangana' },
+      { option: 'tripura', label: 'Tripura' },
+      { option: 'uttar-pradesh', label: 'Uttar Pradesh' },
+      { option: 'uttarakhand', label: 'Uttarakhand' },
+      { option: 'west-bengal', label: 'West Bengal' },
+      { option: 'delhi', label: 'Delhi' },
+    ],
+    userTypeConfig: {
+      limitToUserTypeIds: false,
+    },
+    showConfig: {
+      label: 'State',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'State',
+      placeholderMessage: 'Select state',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please select your state',
+    },
+  },
+  {
+    key: 'city',
+    scope: 'public',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: false,
+    },
+    showConfig: {
+      label: 'City',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'City',
+      placeholderMessage: 'Enter city',
+      displayInSignUp: true,
+      isRequired: true,
+      requiredMessage: 'Please enter your city',
+    },
+  },
+  {
+    key: 'bio',
+    scope: 'public',
+    schemaType: 'text',
+    userTypeConfig: {
+      limitToUserTypeIds: false,
+    },
+    showConfig: {
+      label: 'Bio',
+      displayInProfile: true,
+    },
+    saveConfig: {
+      label: 'Bio / About',
+      placeholderMessage: 'Tell us about yourself or your company',
+      displayInSignUp: false,
+      isRequired: false,
     },
   },
 ];
@@ -173,21 +245,14 @@ export const userFields = [
  * - Update configHelpers.js mergeUserConfig to pass user types to the validUserFields function
  */
 
+// @r7avi - Civil Contractors & Engineers Marketplace - User Types Configuration
 export const userTypes = [
   {
-    userType: 'a',
-    label: 'Seller',
+    userType: 'customer',
+    label: 'Customer',
   },
   {
-    userType: 'b',
-    label: 'Buyer',
-  },
-  {
-    userType: 'c',
-    label: 'Guest',
-  },
-  {
-    userType: 'd',
-    label: 'Host',
+    userType: 'provider',
+    label: 'Provider',
   },
 ];

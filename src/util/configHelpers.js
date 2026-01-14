@@ -1124,12 +1124,13 @@ const union = (arr1, arr2, key) => {
   return [...map.values()];
 };
 
+// @r7avi - Enable local configuration for civil contractors marketplace
 // For debugging, it becomes sometimes important to be able to merge and overwrite with local values
 // Note: We don't want to expose this to production by default.
 //       If you customization relies on multiple listing types or custom listing fields, you need to change this.
 const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
   const isDev = process.env.NODE_ENV === 'development';
-  return isDebugging && isDev;
+  return true; // Always use local configs
 };
 
 // Note: by default, listing types and fields are only merged if explicitly set for debugging
