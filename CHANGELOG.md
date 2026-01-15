@@ -14,10 +14,19 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [change] Update React Redux from v8.1.2 to v9.2.0 and Redux Toolkit from v2.9.0 to v2.11.2.
+  [#742](https://github.com/sharetribe/web-template/pull/742)
+
+## [v10.7.0] 2026-01-15
+
+- [add] Accessibility improvements. The focus is on keyboard navigation and focus handling.
+  [#723](https://github.com/sharetribe/web-template/pull/723)
 - [change] Update mapbox-sdk-js from v0.16.1 to v0.16.2 and add a long cache-control header for it.
   [#741](https://github.com/sharetribe/web-template/pull/741)
 - [add] Fix an email template subject [#740](https://github.com/sharetribe/web-template/pull/740)
 - [add] Update a Marketplace text [#738](https://github.com/sharetribe/web-template/pull/738)
+
+  [v10.7.0]: https://github.com/sharetribe/web-template/compare/v10.6.0...v10.7.0
 
 ## [v10.6.0] 2026-01-12
 
