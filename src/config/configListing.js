@@ -210,6 +210,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Specific Skills Needed',
+      unselectedOptions: false,
     },
   },
   {
@@ -234,6 +235,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Engineering Services Needed',
+      unselectedOptions: false,
     },
   },
   {
@@ -257,6 +259,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Contracting Services Needed',
+      unselectedOptions: false,
     },
   },
   {
@@ -280,6 +283,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Interior Design Services Needed',
+      unselectedOptions: false,
     },
   },
   {
@@ -406,6 +410,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Software Skills',
+      unselectedOptions: false,
     },
   },
   {
@@ -460,6 +465,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Services Offered',
+      unselectedOptions: false,
     },
   },
   {
@@ -491,6 +497,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Types of Workers You Supply',
+      unselectedOptions: false,
     },
   },
 
@@ -667,6 +674,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Machinery Owned',
+      unselectedOptions: false,
     },
   },
 
@@ -698,6 +706,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Design Styles',
+      unselectedOptions: false,
     },
   },
   {
@@ -719,6 +728,7 @@ export const listingFields = [
     },
     showConfig: {
       label: 'Scope of Services',
+      unselectedOptions: false,
     },
   },
   {
