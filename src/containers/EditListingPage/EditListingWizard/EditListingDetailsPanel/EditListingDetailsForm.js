@@ -251,7 +251,7 @@ const AddListingFields = props => {
   const shouldShowField = (key) => {
     if (key === 'hiring_skills_worker') return hiringFor === 'skilled_worker';
     if (key === 'hiring_skills_engineer') return hiringFor === 'contractor'; // contractor shows civil engineer skills
-    if (key === 'hiring_skills_contractor') return ['contractor', 'construction_company'].includes(hiringFor);
+    if (key === 'hiring_skills_contractor') return ['construction_company'].includes(hiringFor);
     if (key === 'hiring_skills_interior') return hiringFor === 'interior_designer';
     return true; // Show other fields by default
   };
