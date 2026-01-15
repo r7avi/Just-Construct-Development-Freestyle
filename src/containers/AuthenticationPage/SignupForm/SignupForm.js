@@ -379,12 +379,12 @@ const SignupFormComponent = props => (
                   {values.pub_providerCategory === 'skilled_worker' ? (
                     <FieldSelect
                       className={css.row}
-                      name="pub_trade"
-                      id={formId ? `${formId}.trade` : 'trade'}
-                      label="Trade/Skill"
+                      name="pub_skilled_worker_type"
+                      id={formId ? `${formId}.skilled_worker_type` : 'skilled_worker_type'}
+                      label="Choose Your Skill"
                       validate={validators.required('Required')}
                     >
-                      <option value="">Select trade...</option>
+                      <option value="">Select skill...</option>
                       <option value="painter">Painter</option>
                       <option value="electrician">Electrician</option>
                       <option value="plumber">Plumber</option>

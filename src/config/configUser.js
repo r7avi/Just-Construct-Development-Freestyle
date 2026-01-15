@@ -185,7 +185,7 @@ export const userFields = [
     },
   },
   {
-    key: 'trade',
+    key: 'skilled_worker_type',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
@@ -198,7 +198,7 @@ export const userFields = [
       { option: 'helper', label: 'Helper' },
     ],
     saveConfig: {
-      label: 'Trade/Skill',
+      label: 'Choose Your Skill',
       displayInSignUp: true,
     },
     userTypeConfig: {
