@@ -1129,7 +1129,8 @@ const union = (arr1, arr2, key) => {
 //       If you customization relies on multiple listing types or custom listing fields, you need to change this.
 const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
   const isDev = process.env.NODE_ENV === 'development';
-  return isDebugging && isDev;
+  // Enable local changes to reflect in development mode
+  return isDev || (isDebugging && isDev);
 };
 
 // Note: by default, listing types and fields are only merged if explicitly set for debugging
@@ -1144,7 +1145,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const listingTypes = shouldMerge
     ? union(hostedListingTypes, defaultListingTypes, 'listingType')
     : hostedListingTypes;
@@ -1170,7 +1171,7 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use user fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const userTypes = shouldMerge
     ? union(hostedUserTypes, defaultUserTypes, 'userType')
     : hostedUserTypes;
