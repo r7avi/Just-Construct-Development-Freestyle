@@ -315,3 +315,6 @@ export const composeValidators = (...validators) => value =>
   validators
     .filter(v => typeof v === 'function')
     .reduce((error, validator) => error || validator(value), VALID);
+  validators
+    .filter(v => typeof v === 'function')
+    .reduce((error, validator) => error || validator(value), VALID);

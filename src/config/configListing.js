@@ -20,8 +20,16 @@ import {
  *                                  Default value: 'public'.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components.
+ *                                  This is relevant when rendering components.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
  * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
+ *                                  These are used to render options for inputs on
+ *                                  EditListingPage, LandingPage, and SearchPage.
+ * - filterConfig:                  Configuration to add a filter for this field to SearchPage.
+ *   - indexForSearch:                Whether to index the field for search.
+ *   - label:                         Label for the filter.
+ *   - group:                         Group for the filter (primary or secondary).
+ * - showConfig:                    Configuration for rendering listing information. (How the field should be shown.)
  *                                  These are used to render options for inputs on
  *                                  EditListingPage, LandingPage, and SearchPage.
  * - filterConfig:                  Configuration to add a filter for this field to SearchPage.
@@ -32,9 +40,12 @@ import {
  *   - label:                         Label for the saved data.
  *   - isDetail (optional):           Can be used to hide field content from listing page.
  *                                    Default value: true.
+ *   - isDetail (optional):           Can be used to hide field content from listing page.
+ *                                    Default value: true.
  * - saveConfig:                    Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
+ *   - isRequired (optional):         Is the field required for users to fill
  *   - isRequired (optional):         Is the field required for users to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
@@ -814,6 +825,16 @@ export const listingFields = [
 ///////////////////////////////////////////////////////////////////////
 
 /**
+ * Configuration options for listing types:
+ * - listingType:     Unique key for the listing type.
+ * - label:           Label for the listing type.
+ * - transactionType: Configuration for the transaction process.
+ *   - process:         The name of the transaction process.
+ *   - alias:           The alias of the transaction process.
+ *   - unitType:        The unit type of the transaction process.
+ * - defaultListingFields: Configuration for default listing fields.
+ *   - location:        Whether to show the location field.
+ *   - price:           Whether to show the price field.
  * Configuration options for listing types:
  * - listingType:     Unique key for the listing type.
  * - label:           Label for the listing type.
