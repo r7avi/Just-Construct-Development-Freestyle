@@ -1,3 +1,9 @@
+/**
+ * Custom Extended Data Field Component
+ * @author r7avi
+ * @description Renders form fields based on schema type configuration
+ * Includes validation for Indian-specific fields (GSTIN, PAN, Phone, Pincode)
+ */
 import React from 'react';
 
 // Import config and utils
@@ -15,6 +21,11 @@ import {
   nonEmptyArray,
   validateInteger,
   validateYoutubeURL,
+  validGSTIN,
+  validPAN,
+  validIndianPhone,
+  validPincode,
+  composeValidators,
 } from '../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../components';
@@ -24,6 +35,23 @@ import css from './CustomExtendedDataField.module.css';
 const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
 const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
+
+// Helper to get specific validators based on field key
+const getSpecificValidator = (key, intl) => {
+  if (key === 'gstin') {
+    return validGSTIN(intl.formatMessage({ id: 'CustomExtendedDataField.invalidGSTIN' }));
+  }
+  if (key === 'pan') {
+    return validPAN(intl.formatMessage({ id: 'CustomExtendedDataField.invalidPAN' }));
+  }
+  if (['phone', 'phone_public', 'phone_private'].includes(key)) {
+    return validIndianPhone(intl.formatMessage({ id: 'CustomExtendedDataField.invalidPhone' }));
+  }
+  if (key === 'pincode') {
+    return validPincode(intl.formatMessage({ id: 'CustomExtendedDataField.invalidPincode' }));
+  }
+  return undefined;
+};
 
 const CustomFieldEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
@@ -87,21 +115,56 @@ const CustomFieldText = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
-  const validateMaybe = isRequired
-    ? { validate: required(requiredMessage || defaultRequiredMessage) }
-    : {};
+
+  const requiredValidator = isRequired ? required(requiredMessage || defaultRequiredMessage) : null;
+  const specificValidator = getSpecificValidator(fieldConfig.key, intl);
+
+  const validate = composeValidators(requiredValidator, specificValidator);
+
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+
+  // Use 'text' input for short fields like Pincode, GSTIN, PAN, Phone.
+  // Default to 'textarea' for others (like descriptions)
+  const isShortField = ['city', 'pincode', 'gstin', 'pan', 'phone', 'phone_public', 'phone_private', 'company_reg_no', 'council_reg_no', 'website'].includes(fieldConfig.key);
+  const inputType = isShortField ? 'text' : 'textarea';
+
+  // Input constraints based on field key
+  let maxLength = undefined;
+  let inputMode = undefined;
+
+  if (fieldConfig.key === 'pincode') {
+    maxLength = 6;
+    inputMode = 'numeric';
+  } else if (['phone', 'phone_public', 'phone_private'].includes(fieldConfig.key)) {
+    maxLength = 10;
+    inputMode = 'tel';
+  } else if (fieldConfig.key === 'pan') {
+    maxLength = 10;
+  } else if (fieldConfig.key === 'gstin') {
+    maxLength = 15;
+  }
+
+  // Strict parsing for numeric fields
+  const parse = value => {
+    if (['pincode', 'phone', 'phone_public', 'phone_private'].includes(fieldConfig.key)) {
+      return value ? value.replace(/[^0-9]/g, '') : value;
+    }
+    return value;
+  };
 
   return (
     <FieldTextInput
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      type={inputType}
       label={label}
       placeholder={placeholder}
-      {...validateMaybe}
+      validate={validate}
+      maxLength={maxLength}
+      inputMode={inputMode}
+      parse={parse}
     />
   );
 };
@@ -232,16 +295,16 @@ const CustomExtendedDataField = props => {
   return schemaType === SCHEMA_TYPE_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldEnum, props)
     : schemaType === SCHEMA_TYPE_MULTI_ENUM && enumOptions
-    ? renderFieldComponent(CustomFieldMultiEnum, props)
-    : schemaType === SCHEMA_TYPE_TEXT
-    ? renderFieldComponent(CustomFieldText, props)
-    : schemaType === SCHEMA_TYPE_LONG
-    ? renderFieldComponent(CustomFieldLong, props)
-    : schemaType === SCHEMA_TYPE_BOOLEAN
-    ? renderFieldComponent(CustomFieldBoolean, props)
-    : schemaType === SCHEMA_TYPE_YOUTUBE
-    ? renderFieldComponent(CustomFieldYoutube, props)
-    : null;
+      ? renderFieldComponent(CustomFieldMultiEnum, props)
+      : schemaType === SCHEMA_TYPE_TEXT
+        ? renderFieldComponent(CustomFieldText, props)
+        : schemaType === SCHEMA_TYPE_LONG
+          ? renderFieldComponent(CustomFieldLong, props)
+          : schemaType === SCHEMA_TYPE_BOOLEAN
+            ? renderFieldComponent(CustomFieldBoolean, props)
+            : schemaType === SCHEMA_TYPE_YOUTUBE
+              ? renderFieldComponent(CustomFieldYoutube, props)
+              : null;
 };
 
 export default CustomExtendedDataField;

@@ -1398,5 +1398,9 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.screenreader.userNav": "User profile navigation",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "CustomExtendedDataField.invalidGSTIN": "Invalid GSTIN format.",
+  "CustomExtendedDataField.invalidPAN": "Invalid PAN format.",
+  "CustomExtendedDataField.invalidPhone": "Invalid Phone Number. Must equal 10 digits.",
+  "CustomExtendedDataField.invalidPincode": "Invalid Pincode. Must be 6 digits."
 }

@@ -243,8 +243,18 @@ const FieldSelectCategory = props => {
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
-  const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
+  const { listingType, listingFieldsConfig, selectedCategories, formId, intl, values } = props;
   const targetCategoryIds = Object.values(selectedCategories);
+  const hiringFor = values?.pub_hiring_for;
+
+  // Logic to conditionally show fields based on 'hiring_for' selection - r7avi
+  const shouldShowField = (key) => {
+    if (key === 'hiring_skills_worker') return hiringFor === 'skilled_worker';
+    if (key === 'hiring_skills_engineer') return hiringFor === 'contractor'; // contractor shows civil engineer skills
+    if (key === 'hiring_skills_contractor') return ['contractor', 'construction_company'].includes(hiringFor);
+    if (key === 'hiring_skills_interior') return hiringFor === 'interior_designer';
+    return true; // Show other fields by default
+  };
 
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, schemaType, scope } = fieldConfig || {};
@@ -254,20 +264,21 @@ const AddListingFields = props => {
     const isProviderScope = ['public', 'private'].includes(scope);
     const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
     const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
+    const isVisible = shouldShowField(key);
 
-    return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
+    return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory && isVisible && fieldConfig.saveConfig
       ? [
-          ...pickedFields,
-          <CustomExtendedDataField
-            key={namespacedKey}
-            name={namespacedKey}
-            fieldConfig={fieldConfig}
-            defaultRequiredMessage={intl.formatMessage({
-              id: 'EditListingDetailsForm.defaultRequiredMessage',
-            })}
-            formId={formId}
-          />,
-        ]
+        ...pickedFields,
+        <CustomExtendedDataField
+          key={namespacedKey}
+          name={namespacedKey}
+          fieldConfig={fieldConfig}
+          defaultRequiredMessage={intl.formatMessage({
+            id: 'EditListingDetailsForm.defaultRequiredMessage',
+          })}
+          formId={formId}
+        />,
+      ]
       : pickedFields;
   }, []);
 
@@ -447,6 +458,7 @@ const EditListingDetailsForm = props => (
               selectedCategories={pickSelectedCategories(values)}
               formId={formId}
               intl={intl}
+              values={values}
             />
           )}
 

@@ -179,7 +179,7 @@ const EditListingWizardTab = props => {
       ready: newListingPublished,
       disabled: fetchInProgress,
       submitButtonText: tabSubmitButtonText,
-      listingTypes: config.listing.listingTypes,
+      listingTypes: props.listingTypes || config.listing.listingTypes,
       onManageDisableScrolling,
       onSubmit: values => {
         return onCompleteEditListingWizardTab(tab, values);

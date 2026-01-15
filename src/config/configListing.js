@@ -1,347 +1,919 @@
-/////////////////////////////////////////////////////////
-// Configurations related to listing.                  //
-// Main configuration here is the extended data config //
-/////////////////////////////////////////////////////////
+/**
+ * Listing Configuration - r7avi
+ * Fields ordered for proper form display
+ */
+import {
+  LISTING_STATE_DRAFT,
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_PUBLISHED,
+  LISTING_STATE_CLOSED,
+} from '../util/types';
 
-// Note: The listingFields come from listingFields asset nowadays by default.
-//       To use this built-in configuration, you need to change the overwrite from configHelper.js
-//       (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
+////////////////////////////////////////////////////////////
+// Configurations related to listing                      //
+////////////////////////////////////////////////////////////
 
 /**
  * Configuration options for listing fields (custom extended data fields):
  * - key:                           Unique key for the extended data field.
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
- *                                  Note: listing doesn't support 'protected' scope atm.
  * - schemaType (optional):         Schema for this extended data field.
- *                                  This is relevant when rendering components and querying listings.
+ *                                  This is relevant when rendering components.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
  * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
- *                                  These are used to render options for inputs and filters on
- *                                  EditListingPage, ListingPage, and SearchPage.
- * - listingTypeConfig (optional):  Relationship configuration against listing types.
- *   - limitToListingTypeIds:         Indicator whether this listing field is relevant to a limited set of listing types.
- *   - listingTypeIds:                An array of listing types, for which this custom listing field is
- *                                    relevant and should be added. This is mandatory if limitToListingTypeIds is true.
- * - categoryConfig (optional):     Relationship configuration against categories.
- *   - limitToCategoryIds:            Indicator whether this listing field is relevant to a limited set of categories.
- *   - categoryIds:                   An array of categories, for which this custom listing field is
- *                                    relevant and should be added. This is mandatory if limitToCategoryIds is true.
- * - filterConfig:                  Filter configuration for listings query.
- *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
- *                                    search index in place. I.e. the key can be used to filter
- *                                    listing queries (then scope needs to be 'public').
- *                                    Note: Sharetribe CLI can be used to set search index for the key:
- *                                    https://www.sharetribe.com/docs/references/extended-data/#search-schema
- *                                    Read more about filtering listings with public data keys from API Reference:
- *                                    https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
- *                                    Default value: false,
- *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
- *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
- *   - label:                         Label for the filter, if the field can be used as query filter
- *   - searchMode (optional):         Search mode for indexed data with multi-enum schema.
- *                                    Possible values: 'has_all' or 'has_any'.
- *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
- * - showConfig:                    Configuration for rendering listing. (How the field should be shown.)
+ *                                  These are used to render options for inputs on
+ *                                  EditListingPage, LandingPage, and SearchPage.
+ * - filterConfig:                  Configuration to add a filter for this field to SearchPage.
+ *   - indexForSearch:                Whether to index the field for search.
+ *   - label:                         Label for the filter.
+ *   - group:                         Group for the filter (primary or secondary).
+ * - showConfig:                    Configuration for rendering listing information. (How the field should be shown.)
  *   - label:                         Label for the saved data.
- *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
- *                                    Default value: true,
+ *   - isDetail (optional):           Can be used to hide field content from listing page.
+ *                                    Default value: true.
  * - saveConfig:                    Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
- *   - isRequired (optional):         Is the field required for providers to fill
+ *   - isRequired (optional):         Is the field required for users to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
+
+// r7avi - Fields ordered: address -> city -> pincode for proper form display
 export const listingFields = [
-  // {
-  //   "scope": "public",
-  //   "label": "Gears",
-  //   "key": "gears",
-  //   "schemaType": "long",
-  //   "numberConfig": {
-  //     "minimum": 1,
-  //     "maximum": 24
-  //   },
-  //   "filterConfig": {
-  //     "indexForSearch": true,
-  //     "group": "primary",
-  //     "label": "Gears"
-  //   }
-  // }
-  // {
-  //   key: 'bikeType',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'city-bikes', label: 'City bikes' },
-  //     { option: 'electric-bikes', label: 'Electric bikes' },
-  //     { option: 'mountain-bikes', label: 'Mountain bikes' },
-  //     { option: 'childrens-bikes', label: "Children's bikes" },
-  //   ],
-  //   categoryConfig: {
-  //     limitToCategoryIds: true,
-  //     categoryIds: ['cats'],
-  //   },
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
-  //     label: 'Bike type',
-  //     group: 'primary',
-  //   },
-  //   showConfig: {
-  //     label: 'Bike type',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Bike type',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a bike type.',
-  //   },
-  // },
-  // {
-  //   key: 'tire',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: '29', label: '29' },
-  //     { option: '28', label: '28' },
-  //     { option: '27', label: '27' },
-  //     { option: '26', label: '26' },
-  //     { option: '24', label: '24' },
-  //     { option: '20', label: '20' },
-  //     { option: '18', label: '18' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Tire size',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Tire size',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Tire size',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a tire size.',
-  //   },
-  // },
-  // {
-  //   key: 'brand',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'cube', label: 'Cube' },
-  //     { option: 'diamant', label: 'Diamant' },
-  //     { option: 'ghost', label: 'GHOST' },
-  //     { option: 'giant', label: 'Giant' },
-  //     { option: 'kalkhoff', label: 'Kalkhoff' },
-  //     { option: 'kona', label: 'Kona' },
-  //     { option: 'otler', label: 'Otler' },
-  //     { option: 'vermont', label: 'Vermont' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Brand',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Brand',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Brand',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a brand.',
-  //   },
-  // },
-  // {
-  //   key: 'accessories',
-  //   scope: 'public',
-  //   schemaType: 'multi-enum',
-  //   enumOptions: [
-  //     { option: 'bell', label: 'Bell' },
-  //     { option: 'lights', label: 'Lights' },
-  //     { option: 'lock', label: 'Lock' },
-  //     { option: 'mudguard', label: 'Mudguard' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Accessories',
-  //     searchMode: 'has_all',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Accessories',
-  //   },
-  //   saveConfig: {
-  //     label: 'Accessories',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: false,
-  //   },
-  // },
-  // // An example of how to use transaction type specific custom fields and private data.
-  // {
-  //   key: 'note',
-  //   scope: 'public',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['product-selling'],
-  //   },
-  //   showConfig: {
-  //     label: 'Extra notes',
-  //   },
-  //   saveConfig: {
-  //     label: 'Extra notes',
-  //     placeholderMessage: 'Some public extra note about this bike...',
-  //   },
-  // },
-  // {
-  //   key: 'privatenote',
-  //   scope: 'private',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['daily-booking'],
-  //   },
-  //   saveConfig: {
-  //     label: 'Private notes',
-  //     placeholderMessage: 'Some private note about this bike...',
-  //   },
-  // },
+  // =================================================================
+  // COMMON FIELDS - r7avi (ordered for form UX)
+  // =================================================================
+  {
+    key: 'type',
+    scope: 'public',
+    schemaType: 'text',
+    showConfig: {
+      label: 'Business Type',
+    },
+  },
+  {
+    key: 'address',
+    scope: 'public',
+    schemaType: 'text',
+    showConfig: {
+      label: 'Address',
+    },
+  },
+
+  // Phone Private 
+
+  {
+    key: 'phone_public',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: [
+        'construction-company-listing',
+        'civil-contractor-listing',
+        'interior-designer-listing',
+        'skilled-worker-listing',
+        'register-civil-engineer'
+      ],
+    },
+    saveConfig: {
+      label: 'Phone Number',
+      placeholderMessage: '10-digit mobile number for clients to call',
+      isRequired: true,
+      requiredMessage: 'Phone number is required.',
+    },
+    showConfig: {
+      label: 'Phone',
+    },
+  },
+
+  // Phone Public
+
+   {
+    key: 'phone_private',
+    scope: 'private',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Phone Number',
+      placeholderMessage: '10-digit mobile number',
+      isRequired: true,
+      requiredMessage: 'Phone number is required.',
+    },
+  },
+  {
+    key: 'city',
+    scope: 'public',
+    schemaType: 'text',
+    filterConfig: {
+      indexForSearch: true,
+      label: 'City',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'City',
+      placeholderMessage: 'Enter City',
+      isRequired: true,
+      requiredMessage: 'City is required.',
+    },
+    showConfig: {
+      label: 'City',
+    },
+  },
+  {
+    key: 'pincode',
+    scope: 'public',
+    schemaType: 'text',
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Pincode',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Pincode',
+      placeholderMessage: 'Enter 6-digit Pincode',
+      isRequired: true,
+      requiredMessage: 'Pincode is required.',
+    },
+    showConfig: {
+      label: 'Pincode',
+    },
+  },
+  {
+    key: 'googleLink',
+    scope: 'public',
+    schemaType: 'text',
+    showConfig: {
+      label: 'Google Link',
+    },
+  },
+
+  // =================================================================
+  // CUSTOMER ONLY FIELDS - r7avi
+  // =================================================================
+
+  // Hire Requirement Fields
+  {
+    key: 'hiring_for',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'contractor', label: 'Civil Contractor / Civil Engineer' },
+      { option: 'construction_company', label: 'Construction Company' },
+      { option: 'interior_designer', label: 'Interior Designer' },
+      { option: 'skilled_worker', label: 'Skilled Worker' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Hiring For',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Who do you want to hire?',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Hiring For',
+    },
+  },
+ 
+  // Conditional Skills/Services Fields based on 'hiring_for' selection
+  {
+    key: 'hiring_skills_worker', // Shown when hiring_for = 'skilled_worker'
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'mason', label: 'Mason / Mistri' },
+      { option: 'plumber', label: 'Plumber' },
+      { option: 'electrician', label: 'Electrician' },
+      { option: 'carpenter', label: 'Carpenter' },
+      { option: 'painter', label: 'Painter' },
+      { option: 'welder', label: 'Welder' },
+      { option: 'bar_bender', label: 'Bar Bender / Fitter' },
+      { option: 'helper', label: 'Helper / Labor' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Specific Skills Needed',
+      placeholderMessage: 'Select skills...',
+    },
+    showConfig: {
+      label: 'Specific Skills Needed',
+    },
+  },
+  {
+    key: 'hiring_skills_engineer', // Shown when hiring_for = 'civil_engineer'
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'structural_design', label: 'Structural Design' },
+      { option: 'site_supervision', label: 'Site Supervision' },
+      { option: 'project_management', label: 'Project Management' },
+      { option: 'estimating_costing', label: 'Estimating & Costing' },
+      { option: 'surveying', label: 'Surveying' },
+      { option: 'interior_planning', label: 'Interior Planning' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Engineering Services Needed',
+      placeholderMessage: 'Select services...',
+    },
+    showConfig: {
+      label: 'Engineering Services Needed',
+    },
+  },
+  {
+    key: 'hiring_skills_contractor', // Shown when hiring_for = 'contractor' OR 'construction_company'
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'turnkey_construction', label: 'Turnkey Construction (Material + Labor)' },
+      { option: 'labor_contract', label: 'Labor Contract Only' },
+      { option: 'renovation_services', label: 'Renovation Services' },
+      { option: 'material_supply', label: 'Material Supply' },
+      { option: 'equipment_rental', label: 'Equipment Rental' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Contracting Services Needed',
+      placeholderMessage: 'Select services...',
+    },
+    showConfig: {
+      label: 'Contracting Services Needed',
+    },
+  },
+  {
+    key: 'hiring_skills_interior', // Shown when hiring_for = 'interior_designer'
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'full_home_design', label: 'Full Home Interior Design' },
+      { option: 'kitchen_wardrobe', label: 'Modular Kitchen & Wardrobes' },
+      { option: 'design_consultation', label: 'Design Consultation Only' },
+      { option: 'turnkey_execution', label: 'Turnkey Execution' },
+      { option: 'commercial_interiors', label: 'Commercial Interiors' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Interior Design Services Needed',
+      placeholderMessage: 'Select services...',
+    },
+    showConfig: {
+      label: 'Interior Design Services Needed',
+    },
+  },
+  {
+    key: 'project_type',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'residential_new', label: 'New Residential Construction' },
+      { option: 'commercial_new', label: 'New Commercial Construction' },
+      { option: 'renovation', label: 'Renovation / Repair' },
+      { option: 'maintenance', label: 'Maintenance' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'Project Type',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Project Type',
+    },
+  },
+  {
+    key: 'timeline_urgency',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'immediate', label: 'Immediate (Within 1 Week)' },
+      { option: 'one_month', label: 'Within 1 Month' },
+      { option: 'three_months', label: 'Usually (1-3 Months)' },
+      { option: 'planning', label: 'Just Planning (Future)' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['hire-requirement'],
+    },
+    saveConfig: {
+      label: 'When do you need this?',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Timeline / Urgency',
+    },
+  },
+
+  // Register Civil Engineer Fields - r7avi
+  
+  {
+    key: 'qualification',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'btech_civil', label: 'B.Tech Civil Engineering' },
+      { option: 'mtech_structural', label: 'M.Tech Structural' },
+      { option: 'mtech_construction', label: 'M.Tech Construction Management' },
+      { option: 'diploma_civil', label: 'Diploma in Civil Engineering' },
+      { option: 'phd_civil', label: 'PhD in Civil Engineering' },
+      { option: 'other', label: 'Other/Related' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['register-civil-engineer'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Qualification',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Highest Qualification',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Highest Qualification',
+    },
+  },
+  {
+    key: 'specialization',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'structural', label: 'Structural Engineering' },
+      { option: 'site_engineering', label: 'Site Engineering' },
+      { option: 'geotechnical', label: 'Geotechnical' },
+      { option: 'quantity_surveying', label: 'Quantity Surveying (QS)' },
+      { option: 'project_management', label: 'Project Management' },
+      { option: 'environmental', label: 'Environmental' },
+      { option: 'transportation', label: 'Transportation' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['register-civil-engineer'],
+    },
+    saveConfig: {
+      label: 'Area of Specialization',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Area of Specialization',
+    },
+  },
+  {
+    key: 'software_skills',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'autocad', label: 'AutoCAD' },
+      { option: 'revit', label: 'Revit' },
+      { option: 'staadpro', label: 'STAAD.Pro' },
+      { option: 'etabs', label: 'ETABS' },
+      { option: 'msproject', label: 'MS Project' },
+      { option: 'primavera', label: 'Primavera' },
+      { option: 'sketchup', label: 'SketchUp' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['register-civil-engineer'],
+    },
+    saveConfig: {
+      label: 'Software Skills',
+      placeholderMessage: 'Select software you know...',
+    },
+    showConfig: {
+      label: 'Software Skills',
+    },
+  },
+  {
+    key: 'experience_years',
+    scope: 'public',
+    schemaType: 'long',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['register-civil-engineer', 'skilled-worker-listing', 'interior-designer-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Min Experience (Years)',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Experience (Years)',
+      isRequired: true,
+    },
+  },
+
+  // =================================================================
+  // PROVIDER ONLY FIELDS - r7avi
+  // =================================================================
+
+  // Construction Company & Contractor Common Fields
+  {
+    key: 'services_offered',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'civil_construction', label: 'Civil Construction' },
+      { option: 'architecture', label: 'Architecture & Planning' },
+      { option: 'interior_design', label: 'Interior Design' },
+      { option: 'manpower_supply', label: 'Manpower Supply (Labor Contractor)' },
+      { option: 'material_supply', label: 'Material Supply' },
+      { option: 'renovation', label: 'Renovation & Repairs' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing', 'civil-contractor-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Services',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Services Offered',
+      placeholderMessage: 'Select all services you provide...',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Services Offered',
+    },
+  },
+  {
+    key: 'manpower_supplied',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'mason', label: 'Mason / Mistri' },
+      { option: 'plumber', label: 'Plumber' },
+      { option: 'electrician', label: 'Electrician' },
+      { option: 'carpenter', label: 'Carpenter' },
+      { option: 'painter', label: 'Painter' },
+      { option: 'welder', label: 'Welder' },
+      { option: 'bar_bender', label: 'Bar Bender / Fitter' },
+      { option: 'helper', label: 'Helper / Labor' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing', 'civil-contractor-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Manpower Available',
+      group: 'secondary',
+    },
+    saveConfig: {
+      label: 'Types of Workers You Supply',
+      placeholderMessage: 'Select worker types available...',
+    },
+    showConfig: {
+      label: 'Types of Workers You Supply',
+    },
+  },
+
+  // Construction Company Specific - r7avi
+  {
+    key: 'company_reg_no',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing'],
+    },
+    saveConfig: {
+      label: 'Company Registration Number (CIN/LLPIN)',
+      isRequired: false,
+    },
+    showConfig: {
+      label: 'Company Registration Number',
+    },
+  },
+  {
+    key: 'gstin',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing'],
+    },
+    saveConfig: {
+      label: 'GSTIN',
+      placeholderMessage: '15-digit GSTIN',
+      isRequired: false,
+    },
+    showConfig: {
+      label: 'GSTIN',
+    },
+  },
+  {
+    key: 'turnover_bracket',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'upto_1cr', label: 'Up to 1 Crore' },
+      { option: '1_to_5cr', label: '1 - 5 Crore' },
+      { option: '5_to_10cr', label: '5 - 10 Crore' },
+      { option: 'above_10cr', label: 'Above 10 Crore' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Turnover',
+    },
+    saveConfig: {
+      label: 'Annual Turnover',
+    },
+    showConfig: {
+      label: 'Annual Turnover',
+    },
+  },
+  {
+    key: 'projects_completed',
+    scope: 'public',
+    schemaType: 'long',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['construction-company-listing'],
+    },
+    saveConfig: {
+      label: 'Projects Completed',
+    },
+    showConfig: {
+      label: 'Projects Completed',
+    },
+  },
+  {
+    key: 'website',
+    scope: 'public',
+    schemaType: 'text',
+    showConfig: {
+      label: 'Website',
+    },
+  },
+
+  // Civil Contractor Specific - r7avi
+  {
+    key: 'contractor_license_class',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'class_1_super', label: 'Class I / Super Class' },
+      { option: 'class_2_a', label: 'Class II / A Class' },
+      { option: 'class_3_b', label: 'Class III / B Class' },
+      { option: 'class_4_c', label: 'Class IV / C Class' },
+      { option: 'class_5_d', label: 'Class V / D Class' },
+      { option: 'unregistered', label: 'Unregistered / Petite Contractor' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['civil-contractor-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'License Class',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Contractor License Class',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Contractor License Class',
+    },
+  },
+  {
+    key: 'registering_authority',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'cpwd', label: 'CPWD (Central)' },
+      { option: 'state_pwd', label: 'State PWD' },
+      { option: 'municipal', label: 'Municipal Corporation' },
+      { option: 'railways', label: 'Indian Railways' },
+      { option: 'other', label: 'Other/None' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['civil-contractor-listing'],
+    },
+    saveConfig: {
+      label: 'Registering Authority',
+    },
+    showConfig: {
+      label: 'Registering Authority',
+    },
+  },
+  {
+    key: 'labor_strength',
+    scope: 'public',
+    schemaType: 'long',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['civil-contractor-listing'],
+    },
+    saveConfig: {
+      label: 'Total Labor Strength',
+      placeholderMessage: 'Approx. number of workers...',
+    },
+    showConfig: {
+      label: 'Total Labor Strength',
+    },
+  },
+  {
+    key: 'machinery_owned',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'excavator', label: 'Excavator (JCB)' },
+      { option: 'concrete_mixer', label: 'Concrete Mixer' },
+      { option: 'vibrator', label: 'Vibrator' },
+      { option: 'crane', label: 'Crane/Lift' },
+      { option: 'road_roller', label: 'Road Roller' },
+      { option: 'trucks', label: 'Tipper/Trucks' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['civil-contractor-listing'],
+    },
+    saveConfig: {
+      label: 'Machinery Owned',
+      placeholderMessage: 'Select machinery...',
+    },
+    showConfig: {
+      label: 'Machinery Owned',
+    },
+  },
+
+  // Interior Designer Specific - r7avi
+  {
+    key: 'design_style',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'modern', label: 'Modern & Contemporary' },
+      { option: 'minimalist', label: 'Minimalist' },
+      { option: 'traditional', label: 'Traditional / Heritage' },
+      { option: 'industrial', label: 'Industrial' },
+      { option: 'bohemian', label: 'Bohemian' },
+      { option: 'scandinavian', label: 'Scandinavian' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['interior-designer-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Design Styles',
+      group: 'secondary',
+    },
+    saveConfig: {
+      label: 'Design Styles',
+      placeholderMessage: 'Select styles you specialize in...',
+    },
+    showConfig: {
+      label: 'Design Styles',
+    },
+  },
+  {
+    key: 'service_scope',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'full_home', label: 'Full Home Interiors' },
+      { option: 'kitchen_wardrobe', label: 'Modular Kitchen & Wardrobes' },
+      { option: 'consultation_only', label: 'Design Consultation Only' },
+      { option: 'turnkey', label: 'Turnkey Execution' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['interior-designer-listing'],
+    },
+    saveConfig: {
+      label: 'Scope of Services',
+    },
+    showConfig: {
+      label: 'Scope of Services',
+    },
+  },
+  {
+    key: 'council_reg_no',
+    scope: 'public',
+    schemaType: 'text',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['interior-designer-listing', 'register-civil-engineer'],
+    },
+    saveConfig: {
+      label: 'Council Registration No. (IIID/COA/IEI)',
+      placeholderMessage: 'If applicable',
+    },
+    showConfig: {
+      label: 'Council Registration No.',
+    },
+  },
+
+  // Skilled Worker Specific - r7avi
+  {
+    key: 'skill_type',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'mason', label: 'Mason / Mistri' },
+      { option: 'plumber', label: 'Plumber' },
+      { option: 'electrician', label: 'Electrician' },
+      { option: 'carpenter', label: 'Carpenter' },
+      { option: 'painter', label: 'Painter' },
+      { option: 'welder', label: 'Welder' },
+      { option: 'bar_bender', label: 'Bar Bender / Fitter' },
+      { option: 'helper', label: 'Helper / Labor' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['skilled-worker-listing'],
+    },
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Skill',
+      group: 'primary',
+    },
+    saveConfig: {
+      label: 'Primary Skill',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Primary Skill',
+    },
+  },
+  {
+    key: 'number_of_workers',
+    scope: 'public',
+    schemaType: 'long',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['skilled-worker-listing'],
+    },
+    saveConfig: {
+      label: 'Number of Workers Available',
+      placeholderMessage: 'If you have a team, how many?',
+    },
+    showConfig: {
+      label: 'Number of Workers Available',
+    },
+  },
+  {
+    key: 'availability',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'immediate', label: 'Available Immediately' },
+      { option: 'one_week', label: 'Available in 1 Week' },
+      { option: 'booked', label: 'Currently Booked' },
+    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['skilled-worker-listing'],
+    },
+    saveConfig: {
+      label: 'Current Availability',
+    },
+    showConfig: {
+      label: 'Current Availability',
+    },
+  },
 ];
 
-///////////////////////////////////////////////////////////////////////
-// Configurations related to listing types and transaction processes //
-///////////////////////////////////////////////////////////////////////
 
-// A presets of supported listing configurations
-//
-// Note 1: The listingTypes come from listingTypes asset nowadays by default.
-//         To use this built-in configuration, you need to change the overwrite from configHelper.js
-//         (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
-// Note 2: transaction type is part of listing type. It defines what transaction process and units
-//         are used when transaction is created against a specific listing.
+///////////////////////////////////////////////////////////////////////
+// Listing types - r7avi                                             //
+///////////////////////////////////////////////////////////////////////
 
 /**
- * Configuration options for listing experience:
- * - listingType:         Unique string. This will be saved to listing's public data on
- *                        EditListingWizard.
- * - label                Label for the listing type. Used as microcopy for options to select
- *                        listing type in EditListingWizard.
- * - transactionType      Set of configurations how this listing type will behave when transaction is
- *                        created.
- *   - process              Transaction process.
- *                          The process must match one of the processes that this client app can handle
- *                          (check src/util/transactions/transaction.js) and the process must also exists in correct
- *                          marketplace environment.
- *   - alias                Valid alias for the aforementioned process. This will be saved to listing's
- *                          public data as transctionProcessAlias and transaction is initiated with this.
- *   - unitType             Unit type is mainly used as pricing unit. This will be saved to
- *                          transaction's protected data.
- *                          Recommendation: don't use same unit types in completely different processes
- *                          ('item' sold should not be priced the same as 'item' booked).
- * - stockType            This is relevant only to listings using default-purchase process.
- *                        If set to 'oneItem', stock management is not showed and the listing is
- *                        considered unique (stock = 1).
- *                        Possible values: 'oneItem', 'multipleItems', 'infiniteOneItem', and 'infiniteMultipleItems'.
- *                        Default: 'multipleItems'.
- * - availabilityType     This is relevant only to listings using default-booking process.
- *                        If set to 'oneSeat', seat management is not showed and the listing is
- *                        considered per person (seat = 1).
- *                        Possible values: 'oneSeat' and 'multipleSeats'.
- *                        Default: 'oneSeat'.
- * - priceVariations      This is relevant only to listings using default-booking process.
- *   - enabled:             If set to true, price variations are enabled.
- *                          Default: false.
- * - defaultListingFields These are tied to transaction processes. Different processes have different flags.
- *                        E.g. default-inquiry can toggle price and location to true/false value to indicate,
- *                        whether price (or location) tab should be shown. If defaultListingFields.price is not
- *                        explicitly set to _false_, price will be shown.
- *                        If the location or pickup is not used, listing won't be returned with location search.
- *                        Use keyword search as main search type if location is not enforced.
- *                        The payoutDetails flag allows provider to bypass setting of payout details.
- *                        Note: customers can't order listings, if provider has not set payout details! Monitor
- *                        providers who have not set payout details and contact them to ensure that they add the details.
+ * Configuration options for listing types:
+ * - listingType:     Unique key for the listing type.
+ * - label:           Label for the listing type.
+ * - transactionType: Configuration for the transaction process.
+ *   - process:         The name of the transaction process.
+ *   - alias:           The alias of the transaction process.
+ *   - unitType:        The unit type of the transaction process.
+ * - defaultListingFields: Configuration for default listing fields.
+ *   - location:        Whether to show the location field.
+ *   - price:           Whether to show the price field.
  */
-
 export const listingTypes = [
-  // // Here are some examples of listingTypes
-  // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
-  // {
-  //   listingType: 'daily-booking',
-  //   label: 'Daily booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'day',
-  //   },
-  //   availabilityType: 'oneSeat',
-  //   defaultListingFields: {
-  //     location: true,
-  //     payoutDetails: true,
-  //   },
-  // },
-  // {
-  //   listingType: 'nightly-booking',
-  //   label: 'Nightly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'night',
-  //   },
-  // },
-  // {
-  //   listingType: 'hourly-booking',
-  //   label: 'Hourly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'hour',
-  //   },
-  // },
-  // {
-  //   listingType: 'product-selling',
-  //   label: 'Sell bicycles',
-  //   transactionType: {
-  //     process: 'default-purchase',
-  //     alias: 'default-purchase/release-1',
-  //     unitType: 'item',
-  //   },
-  //   stockType: 'multipleItems',
-  //   defaultListingFields: {
-  //     shipping: true,
-  //     pickup: true,
-  //     payoutDetails: true,
-  //   },
-  // },
-  // {
-  //   listingType: 'inquiry',
-  //   label: 'Inquiry',
-  //   transactionType: {
-  //     process: 'default-inquiry',
-  //     alias: 'default-inquiry/release-1',
-  //     unitType: 'inquiry',
-  //   },
-  //   defaultListingFields: {
-  //     price: false,
-  //     location: true,
-  //   },
-  // },
+  // CUSTOMER LISTING TYPES
+  {
+    listingType: 'hire-requirement',
+    label: 'Hire a Civil Engineer / Skilled Worker',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'request',
+    },
+    defaultListingFields: {
+      location: false,
+      price: false,
+      payoutDetails: false,
+    },
+  },
+  {
+    listingType: 'register-civil-engineer',
+    label: 'Register as a Civil Engineer',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'request',
+    },
+    defaultListingFields: {
+      location: false,
+      price: false,
+      payoutDetails: false,
+    },
+  },
+
+  // PROVIDER LISTING TYPES
+  {
+    listingType: 'construction-company-listing',
+    label: 'Construction Company',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'offer',
+    },
+    defaultListingFields: {
+      location: true,
+      price: false,
+      payoutDetails: false,
+    },
+  },
+  {
+    listingType: 'civil-contractor-listing',
+    label: 'Civil Contractor',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'offer',
+    },
+    defaultListingFields: {
+      location: true,
+      price: false,
+      payoutDetails: false,
+    },
+  },
+  {
+    listingType: 'interior-designer-listing',
+    label: 'Interior Designer',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'offer',
+    },
+    defaultListingFields: {
+      location: true,
+      price: false,
+      payoutDetails: false,
+    },
+  },
+  {
+    listingType: 'skilled-worker-listing',
+    label: 'Skilled Worker',
+    transactionType: {
+      process: 'default-negotiation',
+      alias: 'default-negotiation/release-1',
+      unitType: 'offer',
+    },
+    defaultListingFields: {
+      location: true,
+      price: false,
+      payoutDetails: false,
+    },
+  },
 ];
 
-// SearchPage can enforce listing query to only those listings with valid listingType
-// However, it only works if you have set 'enum' type search schema for the public data fields
-//   - listingType
-//
-//  Similar setup could be expanded to 2 other extended data fields:
-//   - transactionProcessAlias
-//   - unitType
-//
-// Read More:
-// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+// SearchPage force valid listing type
 export const enforceValidListingType = false;
