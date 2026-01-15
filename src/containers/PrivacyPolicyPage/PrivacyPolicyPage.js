@@ -39,8 +39,8 @@ const PrivacyPolicyContent = props => {
 
   const CustomHeading1 = props => <H1 as="h2" {...props} />;
 
-  const hasData = error === null && data;
-  const sectionsData = hasData ? data : fallbackSections;
+  // Always use local fallback content
+  const sectionsData = fallbackSections;
 
   return (
     <SectionBuilder
@@ -56,17 +56,9 @@ const PrivacyPolicyContent = props => {
 };
 
 // Presentational component for PrivacyPolicyPage
+// Modified to always use local content instead of hosted assets
 const PrivacyPolicyPageComponent = props => {
-  const { pageAssetsData, inProgress, error } = props;
-
-  return (
-    <PageBuilder
-      pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
-      inProgress={inProgress}
-      error={error}
-      fallbackPage={<FallbackPage />}
-    />
-  );
+  return <FallbackPage />;
 };
 
 PrivacyPolicyPageComponent.propTypes = {
@@ -80,12 +72,6 @@ const mapStateToProps = state => {
   return { pageAssetsData, inProgress, error };
 };
 
-// Note: it is important that the withRouter HOC is **outside** the
-// connect HOC, otherwise React Router won't rerender any Route
-// components since connect implements a shouldComponentUpdate
-// lifecycle hook.
-//
-// See: https://github.com/ReactTraining/react-router/issues/4671
 const PrivacyPolicyPage = compose(connect(mapStateToProps))(PrivacyPolicyPageComponent);
 
 const PRIVACY_POLICY_ASSET_NAME = ASSET_NAME;

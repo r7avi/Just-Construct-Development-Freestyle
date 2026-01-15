@@ -1,30 +1,35 @@
 import React from 'react';
-import loadable from '@loadable/component';
-
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
+import { Page, LayoutSingleColumn } from '../../components';
 
-import FallbackPage from './FallbackPage';
-import { ASSET_NAME } from './LandingPage.duck';
-
-const PageBuilder = loadable(() =>
-  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
-);
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
+import CustomLandingPage from './CustomLandingPage';
 
 export const LandingPageComponent = props => {
-  const { pageAssetsData, inProgress, error } = props;
+  const { scrollingDisabled } = props;
 
   return (
-    <PageBuilder
-      pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
-      inProgress={inProgress}
-      error={error}
-      fallbackPage={<FallbackPage error={error} />}
-    />
+    <Page
+      title="Just Construct Directory for Civil Engineers"
+      scrollingDisabled={scrollingDisabled}
+      description="India's premier directory for Civil Engineers, Construction Companies, Contractors, Interior Designers & Skilled Workers. Find verified professionals in your city."
+      schema={{
+        '@context': 'http://schema.org',
+        '@type': 'WebPage',
+        name: 'Just Construct Directory for Civil Engineers',
+        description: 'Find Civil Engineers, Contractors, Interior Designers, and Skilled Workers across India',
+      }}
+    >
+      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
+        <CustomLandingPage />
+      </LayoutSingleColumn>
+    </Page>
   );
 };
 
@@ -36,15 +41,14 @@ LandingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress, error };
+  return { 
+    pageAssetsData, 
+    inProgress, 
+    error, 
+    scrollingDisabled: isScrollingDisabled(state),
+  };
 };
 
-// Note: it is important that the withRouter HOC is **outside** the
-// connect HOC, otherwise React Router won't rerender any Route
-// components since connect implements a shouldComponentUpdate
-// lifecycle hook.
-//
-// See: https://github.com/ReactTraining/react-router/issues/4671
 const LandingPage = compose(connect(mapStateToProps))(LandingPageComponent);
 
 export default LandingPage;
