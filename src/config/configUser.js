@@ -36,124 +36,174 @@
  *   (optional)                       data is relevant and should be added.
  */
 export const userFields = [
+  // existing fields can be kept or removed as needed, replacing with new requirements
+
+  // @r7avi: Split phone configuration to handle different scopes for Customer (protected) and Provider (public)
   {
-    key: 'cuisine',
+    key: 'phone',
+    scope: 'protected',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'Phone Number',
+      displayInSignUp: true,
+      isRequired: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['customer'],
+    },
+  },
+  {
+    key: 'phone',
+    scope: 'public',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'Phone Number',
+      displayInSignUp: true,
+      isRequired: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+  },
+
+  // @r7avi: Added custom fields for Customer and Provider flows
+  {
+    key: 'registrationPurpose',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
-      { option: 'italian', label: 'Italian' },
-      { option: 'chinese', label: 'Chinese' },
-      { option: 'thai', label: 'Thai' },
+      { option: 'standard', label: 'I want to hire professionals' },
+      { option: 'job_seeker', label: 'I am a Civil Engineer seeking work' },
     ],
-    showConfig: {
-      label: 'Favorite cuisine',
-    },
     saveConfig: {
-      label: 'Favorite cuisine',
+      label: 'Registration Purpose',
       displayInSignUp: true,
       isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['customer'],
     },
   },
   {
-    key: 'canCook',
+    key: 'designation',
     scope: 'public',
-    schemaType: 'boolean',
-    showConfig: {
-      label: 'Can you cook?',
-    },
+    schemaType: 'text',
     saveConfig: {
-      label: 'Can you cook?',
+      label: 'Current Designation/Title',
       displayInSignUp: true,
-      isRequired: true,
-      placeholderMessage: 'Select...',
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['customer'],
     },
   },
   {
-    key: 'numberOfCookbooks',
+    key: 'experience',
     scope: 'public',
     schemaType: 'long',
-    showConfig: {
-      label: 'How many cookbooks do you have',
-    },
     saveConfig: {
-      label: 'How many cookbooks do you have',
+      label: 'Years of Experience',
+      displayInSignUp: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['customer', 'provider'], // @r7avi: Enabled for Provider (Civil Contractor) as well
+    },
+  },
+  {
+    key: 'providerCategory',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'construction_company', label: 'Construction Company' },
+      { option: 'civil_contractor', label: 'Civil Contractor' },
+      { option: 'skilled_worker', label: 'Skilled Worker' },
+    ],
+    saveConfig: {
+      label: 'Provider Category',
       displayInSignUp: true,
       isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['provider'],
     },
   },
   {
-    key: 'kitchenDescription',
+    key: 'companyName',
     scope: 'public',
     schemaType: 'text',
-    showConfig: {
-      label: 'Description of your kitchen',
-    },
     saveConfig: {
-      label: 'Description of your kitchen',
+      label: 'Company Name',
       displayInSignUp: true,
-      isRequired: true,
-      placeholderMessage: 'Describe your kitchen...',
     },
     userTypeConfig: {
-      label: 'Description of your kitchen',
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['provider'],
     },
   },
   {
-    key: 'arrivalInstructions',
+    key: 'gstin',
+    scope: 'public',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'GSTIN',
+      displayInSignUp: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+  },
+  {
+    key: 'pan',
     scope: 'protected',
     schemaType: 'text',
-    showConfig: {
-      label: 'How do people arrive at your kitchen?',
-    },
     saveConfig: {
-      label: 'How do people arrive at your kitchen?',
+      label: 'PAN Number',
       displayInSignUp: true,
-      isRequired: true,
-    },
-    userTypeConfig: {
-      limitToUserTypeIds: false,
-      userTypeIds: ['a', 'b', 'c'],
-    },
-  },
-  {
-    key: 'dietaryPreferences',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'vegan', label: 'Vegan' },
-      { option: 'vegetarian', label: 'Vegetarian' },
-      { option: 'gluten-free', label: 'Gluten free' },
-      { option: 'dairy-free', label: 'Dairy free' },
-      { option: 'nut-free', label: 'Nut free' },
-      { option: 'egg-free', label: 'Egg free' },
-      { option: 'low-carb', label: 'Low carb' },
-      { option: 'low-fat', label: 'Low fat' },
-    ],
-    showConfig: {
-      label: 'Dietary preferences',
-    },
-    saveConfig: {
-      displayInSignUp: true,
-      label: 'Dietary preferences',
-      isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
-      userTypeIds: ['a', 'b', 'c'],
+      userTypeIds: ['provider'],
+    },
+  },
+  {
+    key: 'registeredOfficeAddress',
+    scope: 'public',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'Registered Office Address',
+      displayInSignUp: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
+    },
+  },
+  {
+    key: 'trade',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'painter', label: 'Painter' },
+      { option: 'electrician', label: 'Electrician' },
+      { option: 'plumber', label: 'Plumber' },
+      { option: 'carpenter', label: 'Carpenter' },
+      { option: 'mason', label: 'Mason' },
+      { option: 'welder', label: 'Welder' },
+      { option: 'helper', label: 'Helper' },
+    ],
+    saveConfig: {
+      label: 'Trade/Skill',
+      displayInSignUp: true,
+    },
+    userTypeConfig: {
+      limitToUserTypeIds: true,
+      userTypeIds: ['provider'],
     },
   },
 ];
@@ -175,19 +225,11 @@ export const userFields = [
 
 export const userTypes = [
   {
-    userType: 'a',
-    label: 'Seller',
+    userType: 'customer',
+    label: 'Customer',
   },
   {
-    userType: 'b',
-    label: 'Buyer',
-  },
-  {
-    userType: 'c',
-    label: 'Guest',
-  },
-  {
-    userType: 'd',
-    label: 'Host',
+    userType: 'provider',
+    label: 'Provider',
   },
 ];

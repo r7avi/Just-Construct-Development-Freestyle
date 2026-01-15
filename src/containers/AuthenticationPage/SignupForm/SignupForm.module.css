@@ -10,8 +10,7 @@
   }
 }
 
-.defaultUserFields {
-}
+.defaultUserFields {}
 
 .name {
   display: flex;
@@ -24,6 +23,7 @@
 }
 
 .row,
+.phone,
 .customFields {
   margin-top: 24px;
 
@@ -58,4 +58,36 @@
   @media (--viewportMedium) {
     padding: 8px 0;
   }
+}
+
+/* @r7avi: Styling for custom Phone Input with India Flag Prefix */
+.phoneLabel {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: var(--colorTextMain);
+}
+
+.phoneWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.phonePrefix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  font-weight: 600;
+  color: var(--colorTextMain);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.phoneInput {
+  padding-left: 80px !important;
+  /* Make room for 🇮🇳 +91 */
 }

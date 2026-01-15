@@ -8,7 +8,7 @@ import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
-import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField, FieldPhoneNumberInput, FieldSelect } from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
@@ -198,20 +198,205 @@ const SignupFormComponent = props => (
                 validate={passwordValidators}
               />
 
+
+              {/* @r7avi: Custom Phone Number Input with India Flag/Prefix and strict 10-digit validation */}
+              <div className={css.phone}>
+                <label className={css.phoneLabel} htmlFor={formId ? `${formId}.phone` : 'phone'}>
+                  {intl.formatMessage({ id: 'SignupForm.phoneNumberLabel' })}
+                </label>
+                <div className={css.phoneWrapper}>
+                  <span className={css.phonePrefix}>🇮🇳 +91</span>
+                  <FieldTextInput
+                    className={css.phoneInput}
+                    type="text"
+                    id={formId ? `${formId}.phone` : 'phone'}
+                    name={userType === 'customer' ? 'prot_phone' : 'pub_phone'}
+                    placeholder="10-digit mobile number"
+                    validate={validators.composeValidators(
+                      validators.required(
+                        intl.formatMessage({ id: 'SignupForm.phoneNumberRequired' })
+                      ),
+                      value => {
+                        if (value && !/^[0-9]{10}$/.test(value)) {
+                          return 'Phone number must be exactly 10 digits';
+                        }
+                        return undefined;
+                      }
+                    )}
+                    maxLength="10"
+                    parse={value => {
+                      // Remove non-numeric characters
+                      return value ? value.replace(/\D/g, '').slice(0, 10) : value;
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Maintain existing UserFieldPhoneNumber but hidden via console configuration as requested */}
               <UserFieldPhoneNumber
                 formName="SignupForm"
                 className={css.row}
                 userTypeConfig={userTypeConfig}
                 intl={intl}
               />
-            </div>
-          ) : null}
 
-          {showCustomUserFields ? (
-            <div className={css.customFields}>
-              {userFieldProps.map(({ key, ...fieldProps }) => (
-                <CustomExtendedDataField key={key} {...fieldProps} formId={formId} />
-              ))}
+              {/* @r7avi: Customer Specific Fields Logic */}
+              {userType === 'customer' ? (
+                <div className={css.customerFields}>
+                  <FieldSelect
+                    className={css.row}
+                    name="pub_registrationPurpose"
+                    id={formId ? `${formId}.registrationPurpose` : 'registrationPurpose'}
+                    label="Registration Purpose"
+                    validate={validators.required('Required')}
+                  >
+                    <option value="">Select purpose...</option>
+                    <option value="standard">I want to hire professionals</option>
+                    <option value="job_seeker">I am a Civil Engineer seeking work</option>
+                  </FieldSelect>
+
+                  {/* @r7avi: Conditional fields for Job Seeker */}
+                  {values.pub_registrationPurpose === 'job_seeker' ? (
+                    <>
+                      <FieldTextInput
+                        className={css.row}
+                        type="text"
+                        name="pub_designation"
+                        id={formId ? `${formId}.designation` : 'designation'}
+                        label="Current Designation/Title"
+                        placeholder="e.g. Senior Site Engineer"
+                        validate={validators.required('Required')}
+                      />
+                      <FieldTextInput
+                        className={css.row}
+                        type="number"
+                        name="pub_experience"
+                        id={formId ? `${formId}.experience` : 'experience'}
+                        label="Years of Experience"
+                        placeholder="e.g. 5"
+                        validate={validators.required('Required')}
+                        min="0"
+                      />
+                    </>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {/* @r7avi: Provider Specific Fields Logic including Construction Company & Civil Contractor */}
+              {userType === 'provider' ? (
+                <div className={css.providerFields}>
+                  <FieldSelect
+                    className={css.row}
+                    name="pub_providerCategory"
+                    id={formId ? `${formId}.providerCategory` : 'providerCategory'}
+                    label="Provider Category"
+                    validate={validators.required('Required')}
+                  >
+                    <option value="">Select category...</option>
+                    <option value="construction_company">Construction Company</option>
+                    <option value="civil_contractor">Civil Contractor</option>
+                    <option value="skilled_worker">Skilled Worker</option>
+                  </FieldSelect>
+
+                  {/* Construction Company: Company Name, GSTIN, PAN, Address */}
+                  {values.pub_providerCategory === 'construction_company' ? (
+                    <FieldTextInput
+                      className={css.row}
+                      type="text"
+                      name="pub_companyName"
+                      id={formId ? `${formId}.companyName` : 'companyName'}
+                      label="Company Name"
+                      placeholder="Enter company name"
+                      validate={validators.required('Required')}
+                    />
+                  ) : null}
+
+                  {/* Civil Contractor: Experience (Instead of Company Name), GSTIN, PAN, Address */}
+                  {values.pub_providerCategory === 'civil_contractor' ? (
+                    <FieldTextInput
+                      className={css.row}
+                      type="number"
+                      name="pub_experience"
+                      id={formId ? `${formId}.experience` : 'experience'}
+                      label="Years of Experience"
+                      placeholder="e.g. 5"
+                      validate={validators.required('Required')}
+                      min="0"
+                    />
+                  ) : null}
+
+                  {/* @r7avi: Common Compliance Fields (GSTIN, PAN, Address) - Optional & Validated */}
+                  {['construction_company', 'civil_contractor'].includes(values.pub_providerCategory) ? (
+                    <>
+                      <FieldTextInput
+                        className={css.row}
+                        type="text"
+                        name="pub_gstin"
+                        id={formId ? `${formId}.gstin` : 'gstin'}
+                        label="GSTIN (Optional)"
+                        placeholder="15-character GSTIN"
+                        parse={value => (value ? value.toUpperCase() : value)}
+                        validate={validators.composeValidators(
+                          value => {
+                            if (value && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(value)) {
+                              return 'Invalid GSTIN format (e.g., 22AAAAA0000A1Z5)';
+                            }
+                            return undefined;
+                          }
+                        )}
+                        maxLength="15"
+                      />
+                      <FieldTextInput
+                        className={css.row}
+                        type="text"
+                        name="prot_pan"
+                        id={formId ? `${formId}.pan` : 'pan'}
+                        label="PAN Number (Optional)"
+                        placeholder="10-character PAN"
+                        parse={value => (value ? value.toUpperCase() : value)}
+                        validate={validators.composeValidators(
+                          value => {
+                            if (value && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value)) {
+                              return 'Invalid PAN format (e.g., ABCDE1234F)';
+                            }
+                            return undefined;
+                          }
+                        )}
+                        maxLength="10"
+                      />
+                      <FieldTextInput
+                        className={css.row}
+                        type="textarea"
+                        name="pub_registeredOfficeAddress"
+                        id={formId ? `${formId}.registeredOfficeAddress` : 'registeredOfficeAddress'}
+                        label="Registered Office Address"
+                        placeholder="Enter full address"
+                        validate={validators.required('Required')}
+                      />
+                    </>
+                  ) : null}
+
+                  {values.pub_providerCategory === 'skilled_worker' ? (
+                    <FieldSelect
+                      className={css.row}
+                      name="pub_trade"
+                      id={formId ? `${formId}.trade` : 'trade'}
+                      label="Trade/Skill"
+                      validate={validators.required('Required')}
+                    >
+                      <option value="">Select trade...</option>
+                      <option value="painter">Painter</option>
+                      <option value="electrician">Electrician</option>
+                      <option value="plumber">Plumber</option>
+                      <option value="carpenter">Carpenter</option>
+                      <option value="mason">Mason</option>
+                      <option value="welder">Welder</option>
+                      <option value="helper">Helper</option>
+                    </FieldSelect>
+                  ) : null}
+                </div>
+              ) : null}
+
             </div>
           ) : null}
 
