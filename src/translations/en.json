@@ -987,7 +987,6 @@
   "SignupForm.phoneNumberLabel": "Phone number",
   "SignupForm.phoneNumberPlaceholder": "Enter your phone number.",
   "SignupForm.phoneNumberRequired": "You need to add a phone number.",
-  "SignupForm.phoneNumberInvalid": "Please enter a valid 10-digit Indian mobile number",
   "SignupForm.signUp": "Sign up",
   "SortBy.heading": "Sort by",
   "SortBy.highestPrice": "Highest price",
