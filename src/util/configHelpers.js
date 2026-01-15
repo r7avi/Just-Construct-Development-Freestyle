@@ -379,16 +379,16 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
 
   const validValue = hasValidUserTypes
     ? {
-      userTypeConfig: {
-        limitToUserTypeIds,
-        userTypeIds: validatedUserTypes,
-      },
-    }
+        userTypeConfig: {
+          limitToUserTypeIds,
+          userTypeIds: validatedUserTypes,
+        },
+      }
     : {
-      userTypeConfig: {
-        limitToUserTypeIds: false,
-      },
-    };
+        userTypeConfig: {
+          limitToUserTypeIds: false,
+        },
+      };
   return [isValid, validValue];
 };
 
@@ -407,8 +407,8 @@ const validListingTypesForBuiltInSetup = (includeForListingTypes, listingTypesIn
   const validValue = hasValidListingTypes
     ? { listingTypeConfig: { limitToListingTypeIds: true, listingTypeIds: validatedListingTypes } }
     : isUndefinedOrNull
-      ? { listingTypeConfig: { limitToListingTypeIds: false } }
-      : {};
+    ? { listingTypeConfig: { limitToListingTypeIds: false } }
+    : {};
   return [isValid, validValue];
 };
 
@@ -438,11 +438,11 @@ const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesIn
 
   const validValue = hasValidListingTypeIds
     ? {
-      listingTypeConfig: {
-        limitToListingTypeIds,
-        listingTypeIds: validatedListingTypeIds,
-      },
-    }
+        listingTypeConfig: {
+          limitToListingTypeIds,
+          listingTypeIds: validatedListingTypeIds,
+        },
+      }
     : { listingTypeConfig: { limitToListingTypeIds: false } };
   return [isValid, validValue];
 };
@@ -483,11 +483,11 @@ const validListingTypesForCategoryConfig = (categoryConfig, categoriesInUse) => 
 
   const validValue = hasValidCategoryIds
     ? {
-      categoryConfig: {
-        limitToCategoryIds,
-        categoryIds: validatedCategoryIds,
-      },
-    }
+        categoryConfig: {
+          limitToCategoryIds,
+          categoryIds: validatedCategoryIds,
+        },
+      }
     : { categoryConfig: { limitToCategoryIds: false } };
   return [isValid, validValue];
 };
@@ -747,26 +747,26 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
           name === 'key'
             ? validKey(value, keys)
             : name === 'scope'
-              ? validEnumString('scope', value, scopeOptions, 'public')
-              : name === 'numberConfig'
-                ? validNumberConfig(value)
-                : name === 'includeForListingTypes'
-                  ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
-                  : name === 'listingTypeConfig'
-                    ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
-                    : name === 'categoryConfig'
-                      ? validListingTypesForCategoryConfig(value, categoriesInUse)
-                      : name === 'schemaType'
-                        ? validEnumString('schemaType', value, validSchemaTypes)
-                        : name === 'enumOptions'
-                          ? validSchemaOptions(value, schemaType)
-                          : name === 'filterConfig'
-                            ? validFilterConfig(value, schemaType)
-                            : name === 'showConfig'
-                              ? validShowConfig(value)
-                              : name === 'saveConfig'
-                                ? validSaveConfig(value)
-                                : [true, { [name]: value }];
+            ? validEnumString('scope', value, scopeOptions, 'public')
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
+            : name === 'includeForListingTypes'
+            ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
+            : name === 'listingTypeConfig'
+            ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
+            : name === 'categoryConfig'
+            ? validListingTypesForCategoryConfig(value, categoriesInUse)
+            : name === 'schemaType'
+            ? validEnumString('schemaType', value, validSchemaTypes)
+            : name === 'enumOptions'
+            ? validSchemaOptions(value, schemaType)
+            : name === 'filterConfig'
+            ? validFilterConfig(value, schemaType)
+            : name === 'showConfig'
+            ? validShowConfig(value)
+            : name === 'saveConfig'
+            ? validSaveConfig(value)
+            : [true, { [name]: value }];
 
         const hasFoundValid = !(acc.isValid === false || isValid === false);
         // Let's warn about wrong data in listing extended data config
@@ -816,20 +816,20 @@ const validUserFields = (userFields, userTypesInUse) => {
           name === 'key'
             ? validKey(value, keys)
             : name === 'label'
-              ? validLabel(value)
-              : name === 'scope'
-                ? validEnumString('scope', value, scopeOptions, 'public')
-                : name === 'schemaType'
-                  ? validEnumString('schemaType', value, validSchemaTypes)
-                  : name === 'enumOptions'
-                    ? validSchemaOptions(value, schemaType)
-                    : name === 'showConfig'
-                      ? validUserShowConfig(value)
-                      : name === 'userTypeConfig'
-                        ? validUserTypesForUserConfig(value, userTypesInUse)
-                        : name === 'saveConfig'
-                          ? validUserSaveConfig(value)
-                          : [true, value];
+            ? validLabel(value)
+            : name === 'scope'
+            ? validEnumString('scope', value, scopeOptions, 'public')
+            : name === 'schemaType'
+            ? validEnumString('schemaType', value, validSchemaTypes)
+            : name === 'enumOptions'
+            ? validSchemaOptions(value, schemaType)
+            : name === 'showConfig'
+            ? validUserShowConfig(value)
+            : name === 'userTypeConfig'
+            ? validUserTypesForUserConfig(value, userTypesInUse)
+            : name === 'saveConfig'
+            ? validUserSaveConfig(value)
+            : [true, value];
 
         const hasFoundValid = !(acc.isValid === false || isValid === false);
         // Let's warn about wrong data in listing extended data config
@@ -938,15 +938,15 @@ const restructureListingTypes = hostedListingTypes => {
       const { id, label, transactionProcess, unitType, ...rest } = listingType;
       return transactionProcess
         ? {
-          listingType: id,
-          label,
-          transactionType: {
-            process: transactionProcess.name,
-            alias: transactionProcess.alias,
-            unitType,
-          },
-          ...rest,
-        }
+            listingType: id,
+            label,
+            transactionType: {
+              process: transactionProcess.name,
+              alias: transactionProcess.alias,
+              unitType,
+            },
+            ...rest,
+          }
         : null;
     }) || []
   );
@@ -975,27 +975,27 @@ const restructureListingFields = hostedListingFields => {
 
       return key
         ? {
-          key,
-          scope,
-          schemaType,
-          ...enumOptionsMaybe,
-          ...numberConfigMaybe,
-          filterConfig: {
-            ...filterConfig,
-            label: filterConfig.label || defaultLabel,
-          },
-          showConfig: {
-            ...showConfig,
-            label: showConfig.label || defaultLabel,
-          },
-          saveConfig: {
-            ...restSaveConfig,
-            isRequired,
-            label: saveConfig.label || defaultLabel,
-          },
-          categoryConfig,
-          ...rest,
-        }
+            key,
+            scope,
+            schemaType,
+            ...enumOptionsMaybe,
+            ...numberConfigMaybe,
+            filterConfig: {
+              ...filterConfig,
+              label: filterConfig.label || defaultLabel,
+            },
+            showConfig: {
+              ...showConfig,
+              label: showConfig.label || defaultLabel,
+            },
+            saveConfig: {
+              ...restSaveConfig,
+              isRequired,
+              label: saveConfig.label || defaultLabel,
+            },
+            categoryConfig,
+            ...rest,
+          }
         : null;
     }) || []
   );
@@ -1032,22 +1032,22 @@ const restructureUserFields = hostedUserFields => {
 
       return key
         ? {
-          key,
-          scope,
-          schemaType,
-          ...enumOptionsMaybe,
-          showConfig: {
-            ...showConfig,
-            label: showConfig.label || defaultLabel,
-          },
-          saveConfig: {
-            ...restSaveConfig,
-            isRequired,
-            label: saveConfig.label || defaultLabel,
-          },
-          userTypeConfig,
-          ...rest,
-        }
+            key,
+            scope,
+            schemaType,
+            ...enumOptionsMaybe,
+            showConfig: {
+              ...showConfig,
+              label: showConfig.label || defaultLabel,
+            },
+            saveConfig: {
+              ...restSaveConfig,
+              isRequired,
+              label: saveConfig.label || defaultLabel,
+            },
+            userTypeConfig,
+            ...rest,
+          }
         : null;
     }) || []
   );
@@ -1291,16 +1291,16 @@ const validDefaultFilters = (defaultFilters, categoryConfiguration, listingTypeC
       return schemaType === 'category'
         ? validCategoryConfig(data, categoryConfiguration)
         : schemaType === 'listingType'
-          ? validListingTypeSearchConfig(data, listingTypeConfig)
-          : schemaType === 'dates'
-            ? validDatesConfig(data)
-            : schemaType === 'seats'
-              ? validSeatsConfig(data)
-              : schemaType === 'price'
-                ? validPriceConfig(data)
-                : schemaType === 'keywords'
-                  ? validKeywordsConfig(data)
-                  : data;
+        ? validListingTypeSearchConfig(data, listingTypeConfig)
+        : schemaType === 'dates'
+        ? validDatesConfig(data)
+        : schemaType === 'seats'
+        ? validSeatsConfig(data)
+        : schemaType === 'price'
+        ? validPriceConfig(data)
+        : schemaType === 'keywords'
+        ? validKeywordsConfig(data)
+        : data;
     })
     .filter(Boolean);
 };
@@ -1330,13 +1330,13 @@ const mergeSearchConfig = (
   // but other default search configs come from hosted assets
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
-      sortConfig: defaultSearchConfig.sortConfig,
-      // This just shows how to add custom built-in filters.
-      // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
-      listingTypeFilter: defaultSearchConfig.listingTypeFilter,
-      categoryFilter: defaultSearchConfig.categoryFilter,
-      ...hostedSearchConfig,
-    }
+        sortConfig: defaultSearchConfig.sortConfig,
+        // This just shows how to add custom built-in filters.
+        // Note: listingTypeFilter and categoryFilter might be overwritten by hostedSearchConfig
+        listingTypeFilter: defaultSearchConfig.listingTypeFilter,
+        categoryFilter: defaultSearchConfig.categoryFilter,
+        ...hostedSearchConfig,
+      }
     : defaultSearchConfig;
 
   const {
@@ -1360,8 +1360,8 @@ const mergeSearchConfig = (
     keywordsFilter?.enabled === true
       ? [{ key: 'keywords', schemaType: 'keywords' }]
       : defaultSearchConfig.keywordsFilter
-        ? [defaultSearchConfig.keywordsFilter]
-        : [];
+      ? [defaultSearchConfig.keywordsFilter]
+      : [];
 
   const seatsFilterMaybe = typeof seatsFilter?.enabled === 'boolean' ? [seatsFilter] : [];
 

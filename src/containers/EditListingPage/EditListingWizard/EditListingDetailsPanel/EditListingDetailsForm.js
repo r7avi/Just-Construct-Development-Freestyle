@@ -244,7 +244,6 @@ const FieldSelectCategory = props => {
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, selectedCategories, formId, intl, values } = props;
-  const { listingType, listingFieldsConfig, selectedCategories, formId, intl, values } = props;
   const targetCategoryIds = Object.values(selectedCategories);
   const hiringFor = values?.pub_hiring_for;
 
@@ -266,22 +265,9 @@ const AddListingFields = props => {
     const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
     const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
     const isVisible = shouldShowField(key);
-    const isVisible = shouldShowField(key);
 
     return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory && isVisible && fieldConfig.saveConfig
-    return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory && isVisible && fieldConfig.saveConfig
       ? [
-        ...pickedFields,
-        <CustomExtendedDataField
-          key={namespacedKey}
-          name={namespacedKey}
-          fieldConfig={fieldConfig}
-          defaultRequiredMessage={intl.formatMessage({
-            id: 'EditListingDetailsForm.defaultRequiredMessage',
-          })}
-          formId={formId}
-        />,
-      ]
         ...pickedFields,
         <CustomExtendedDataField
           key={namespacedKey}
@@ -472,7 +458,6 @@ const EditListingDetailsForm = props => (
               selectedCategories={pickSelectedCategories(values)}
               formId={formId}
               intl={intl}
-              values={values}
               values={values}
             />
           )}
