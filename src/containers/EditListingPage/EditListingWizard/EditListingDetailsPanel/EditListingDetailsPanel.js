@@ -183,21 +183,21 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
   return isBookingProcessAlias(processAlias)
     ? {}
     : {
-        availabilityPlan: {
-          type: 'availability-plan/time',
-          timezone: 'Etc/UTC',
-          entries: [
-            // Note: "no entries" is the same as seats=0 for every entry.
-            // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-            // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
-          ],
-        },
-      };
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          // Note: "no entries" is the same as seats=0 for every entry.
+          // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+          // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+        ],
+      },
+    };
 };
 
 /**
@@ -287,7 +287,7 @@ const EditListingDetailsPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const { publicData, state } = listing?.attributes || {};
-  const listingTypes = config.listing.listingTypes;
+  const listingTypes = props.listingTypes || config.listing.listingTypes;
   const listingFields = config.listing.listingFields;
   const listingCategories = config.categoryConfiguration.categories;
   const categoryKey = config.categoryConfiguration.key;
@@ -318,15 +318,15 @@ const EditListingDetailsPanel = props => {
 
   const panelHeadingProps = isPublished
     ? {
-        id: 'EditListingDetailsPanel.title',
-        values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
-        messageProps: { listingTitle: listing.attributes.title },
-      }
+      id: 'EditListingDetailsPanel.title',
+      values: { listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> },
+      messageProps: { listingTitle: listing.attributes.title },
+    }
     : {
-        id: 'EditListingDetailsPanel.createListingTitle',
-        values: { lineBreak: <br /> },
-        messageProps: {},
-      };
+      id: 'EditListingDetailsPanel.createListingTitle',
+      values: { lineBreak: <br /> },
+      messageProps: {},
+    };
 
   return (
     <main className={classes}>

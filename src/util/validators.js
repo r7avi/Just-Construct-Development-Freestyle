@@ -269,5 +269,45 @@ export const validSGID = message => value => {
   return value.length === 9 ? VALID : message;
 };
 
+export const validGSTIN = message => value => {
+  if (typeof value === 'undefined' || value === null || value === '') {
+    return undefined;
+  }
+  // GSTIN format: 22AAAAA0000A1Z5 (15 chars)
+  // Regex: 2 digits, 5 letters, 4 digits, 1 letter, 1 alphanumeric, 'Z', 1 alphanumeric
+  const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  return gstinRegex.test(value.toUpperCase()) ? undefined : message;
+};
+
+export const validPAN = message => value => {
+  if (typeof value === 'undefined' || value === null || value === '') {
+    return undefined;
+  }
+  // PAN format: ABCDE1234F (10 chars)
+  // Regex: 5 letters, 4 digits, 1 letter
+  const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+  return panRegex.test(value.toUpperCase()) ? undefined : message;
+};
+
+export const validIndianPhone = message => value => {
+  if (typeof value === 'undefined' || value === null || value === '') {
+    return undefined;
+  }
+  // Indian Phone: 10 digits
+  const phoneRegex = /^[0-9]{10}$/;
+  return phoneRegex.test(value) ? undefined : message;
+};
+
+export const validPincode = message => value => {
+  if (typeof value === 'undefined' || value === null || value === '') {
+    return undefined;
+  }
+  // Indian Pincode: 6 digits, first digit non-zero
+  const pincodeRegex = /^[1-9][0-9]{5}$/;
+  return pincodeRegex.test(value) ? undefined : message;
+};
+
 export const composeValidators = (...validators) => value =>
-  validators.reduce((error, validator) => error || validator(value), VALID);
+  validators
+    .filter(v => typeof v === 'function')
+    .reduce((error, validator) => error || validator(value), VALID);

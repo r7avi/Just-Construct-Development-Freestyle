@@ -186,16 +186,16 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
       return schemaType === SCHEMA_TYPE_ENUM
         ? typeof savedListingField === 'string' && hasValidEnumValue(savedListingField)
         : schemaType === SCHEMA_TYPE_MULTI_ENUM
-        ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
-        : schemaType === SCHEMA_TYPE_TEXT
-        ? typeof savedListingField === 'string'
-        : schemaType === SCHEMA_TYPE_LONG
-        ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
-        : schemaType === SCHEMA_TYPE_BOOLEAN
-        ? savedListingField === true || savedListingField === false
-        : schemaType === SCHEMA_TYPE_YOUTUBE
-        ? typeof savedListingField === 'string'
-        : false;
+          ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
+          : schemaType === SCHEMA_TYPE_TEXT
+            ? typeof savedListingField === 'string'
+            : schemaType === SCHEMA_TYPE_LONG
+              ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
+              : schemaType === SCHEMA_TYPE_BOOLEAN
+                ? savedListingField === true || savedListingField === false
+                : schemaType === SCHEMA_TYPE_YOUTUBE
+                  ? typeof savedListingField === 'string'
+                  : false;
     }
     return true;
   };
@@ -337,18 +337,35 @@ const RedirectToStripe = ({ redirectFn }) => {
   return <FormattedMessage id="EditListingWizard.redirectingToStripe" />;
 };
 
-const getListingTypeConfig = (listing, selectedListingType, config) => {
+const getListingTypeConfig = (listing, selectedListingType, config, userType) => {
   const existingListingType = listing?.attributes?.publicData?.listingType;
-  const validListingTypes = config.listing.listingTypes;
+  const validListingTypes = config.listing.listingTypes.filter(lt => {
+    if (userType === 'customer') {
+      // Customer can Hire or Register as Engineer (if they are an individual engineer)
+      return ['hire-requirement', 'register-civil-engineer'].includes(lt.listingType);
+    }
+    if (userType === 'provider') {
+      // Provider options
+      return [
+        'construction-company-listing',
+        'civil-contractor-listing',
+        'interior-designer-listing',
+        'skilled-worker-listing',
+      ].includes(lt.listingType);
+    }
+    // If no user type (e.g. admin or error), show all or none?
+    // Default to showing everything for now if userType is missing (though it shouldn't be)
+    return true;
+  });
   const hasOnlyOneListingType = validListingTypes?.length === 1;
 
   const listingTypeConfig = existingListingType
     ? validListingTypes.find(conf => conf.listingType === existingListingType)
     : selectedListingType
-    ? validListingTypes.find(conf => conf.listingType === selectedListingType.listingType)
-    : hasOnlyOneListingType
-    ? validListingTypes[0]
-    : null;
+      ? validListingTypes.find(conf => conf.listingType === selectedListingType.listingType)
+      : hasOnlyOneListingType
+        ? validListingTypes[0]
+        : null;
   return listingTypeConfig;
 };
 
@@ -433,7 +450,8 @@ class EditListingWizard extends Component {
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
-    const listingTypeConfig = getListingTypeConfig(listing, this.state.selectedListingType, config);
+    const userType = ensureCurrentUser(currentUser)?.attributes?.profile?.publicData?.userType;
+    const listingTypeConfig = getListingTypeConfig(listing, this.state.selectedListingType, config, userType);
     // Through hosted configs (listingTypeConfig.defaultListingFields?.payoutDetails),
     // it's possible to publish listing without payout details set by provider.
     // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
@@ -508,11 +526,27 @@ class EditListingWizard extends Component {
     // NOTE: If the listing has invalid configuration in place,
     // the listing is considered deprecated and we don't allow user to modify the listing anymore.
     // Instead, operator should do that through Console or Integration API.
-    const validListingTypes = config.listing.listingTypes;
+    const userType = ensureCurrentUser(currentUser)?.attributes?.profile?.publicData?.userType;
+    const validListingTypes = config.listing.listingTypes.filter(lt => {
+      if (userType === 'customer') {
+        return ['hire-requirement', 'register-civil-engineer'].includes(lt.listingType);
+      }
+      if (userType === 'provider') {
+        return [
+          'construction-company-listing',
+          'civil-contractor-listing',
+          'interior-designer-listing',
+          'skilled-worker-listing',
+        ].includes(lt.listingType);
+      }
+      // Fallback for admin or unauthenticated/loading states (though ensuring currentUser handles loading usually)
+      return true;
+    });
     const listingTypeConfig = getListingTypeConfig(
       currentListing,
       this.state.selectedListingType,
-      config
+      config,
+      userType
     );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
@@ -525,8 +559,8 @@ class EditListingWizard extends Component {
     const processName = transactionProcessAlias
       ? transactionProcessAlias.split('/')[0]
       : validListingTypes.length === 1
-      ? validListingTypes[0].transactionType.process
-      : INQUIRY_PROCESS_NAME;
+        ? validListingTypes[0].transactionType.process
+        : INQUIRY_PROCESS_NAME;
 
     const hasListingTypeSelected =
       existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
@@ -683,6 +717,7 @@ class EditListingWizard extends Component {
                 onManageDisableScrolling={onManageDisableScrolling}
                 config={config}
                 routeConfiguration={routeConfiguration}
+                listingTypes={validListingTypes}
                 intl={intl}
               />
             );
