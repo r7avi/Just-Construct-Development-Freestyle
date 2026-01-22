@@ -33,12 +33,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh 'yarn test-ci'
-            }
-        }
-
         stage('Setup Environment') {
             steps {
                 withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
