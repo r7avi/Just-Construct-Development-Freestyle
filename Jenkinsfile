@@ -48,6 +48,15 @@ pipeline {
             }
         }
 
+        stage('Setup Environment') {
+            steps {
+                // Copy .env from Jenkins credentials (secret file)
+                withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
+                    sh 'cp $ENV_FILE .env'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 nodejs(nodeJSInstallationName: "NodeJS ${NODE_VERSION}") {
