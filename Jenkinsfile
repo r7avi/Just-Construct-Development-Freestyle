@@ -37,7 +37,9 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
-                    sh 'cp "$ENV_FILE" .env'
+                    sh 'sudo rm -f .env'
+                    sh 'sudo cp "$ENV_FILE" .env'
+                    sh 'sudo chown jenkins:jenkins .env'
                 }
             }
         }
