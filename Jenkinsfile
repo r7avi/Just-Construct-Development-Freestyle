@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         APP_NAME = 'app'
-        PM2_HOME = '/var/lib/jenkins/.pm2'
     }
 
     options {
@@ -44,11 +43,11 @@ pipeline {
         stage('Start Dev Server') {
             steps {
                 script {
-                    sh 'npm list -g pm2 || npm install -g pm2'
-                    sh "pm2 delete ${APP_NAME} || true"
-                    sh "pm2 start yarn --name ${APP_NAME} -- run dev"
-                    sh 'pm2 save'
-                    sh 'pm2 status'
+                    sh 'sudo npm list -g pm2 || sudo npm install -g pm2'
+                    sh "sudo pm2 delete ${APP_NAME} || true"
+                    sh "sudo pm2 start yarn --name ${APP_NAME} --cwd \"\$(pwd)\" -- run dev"
+                    sh 'sudo pm2 save'
+                    sh 'sudo pm2 status'
                 }
             }
         }
