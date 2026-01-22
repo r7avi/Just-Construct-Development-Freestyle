@@ -6,10 +6,6 @@ pipeline {
         PM2_HOME = '/var/lib/jenkins/.pm2'
     }
 
-    tools {
-        nodejs 'NodeJS 20'
-    }
-
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timeout(time: 30, unit: 'MINUTES')
@@ -59,19 +55,10 @@ pipeline {
         stage('Deploy with PM2') {
             steps {
                 script {
-                    // Check if PM2 is installed globally
                     sh 'npm list -g pm2 || npm install -g pm2'
-                    
-                    // Stop existing process if running
                     sh "pm2 delete ${APP_NAME} || true"
-                    
-                    // Start application with PM2 ecosystem file
                     sh 'pm2 start ecosystem.config.js --env production'
-                    
-                    // Save PM2 process list
                     sh 'pm2 save'
-                    
-                    // Show status
                     sh 'pm2 status'
                 }
             }
