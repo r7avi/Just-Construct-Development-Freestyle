@@ -36,7 +36,7 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 withCredentials([file(credentialsId: 'app-env-file', variable: 'ENV_FILE')]) {
-                    sh 'cp $ENV_FILE .env'
+                    sh 'cp "$ENV_FILE" .env'
                 }
             }
         }

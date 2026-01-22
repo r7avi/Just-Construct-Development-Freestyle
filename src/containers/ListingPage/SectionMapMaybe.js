@@ -21,7 +21,8 @@ import css from './ListingPage.module.css';
 class SectionMapMaybe extends Component {
   constructor(props) {
     super(props);
-    this.state = { isStatic: true };
+    // Set isStatic to false to load interactive map immediately
+    this.state = { isStatic: false };
   }
 
   render() {
