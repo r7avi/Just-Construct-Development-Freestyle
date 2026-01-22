@@ -47,10 +47,10 @@ pipeline {
         stage('Start Dev Server') {
             steps {
                 script {
-                    sh 'pm2 delete $APP_NAME || true'
-                    sh 'pm2 start yarn --name $APP_NAME -- run dev'
-                    sh 'pm2 save'
-                    sh 'pm2 status'
+                    sh 'sudo PM2_HOME=/root/.pm2 pm2 delete $APP_NAME || true'
+                    sh 'sudo PM2_HOME=/root/.pm2 pm2 start yarn --name $APP_NAME --cwd "$(pwd)" -- run dev'
+                    sh 'sudo PM2_HOME=/root/.pm2 pm2 save'
+                    sh 'sudo PM2_HOME=/root/.pm2 pm2 status'
                 }
             }
         }
