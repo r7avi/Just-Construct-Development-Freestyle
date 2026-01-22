@@ -41,18 +41,12 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'yarn build'
-            }
-        }
-
-        stage('Deploy with PM2') {
+        stage('Start Dev Server') {
             steps {
                 script {
                     sh 'npm list -g pm2 || npm install -g pm2'
                     sh "pm2 delete ${APP_NAME} || true"
-                    sh 'pm2 start ecosystem.config.js --env production'
+                    sh "pm2 start yarn --name ${APP_NAME} -- run dev"
                     sh 'pm2 save'
                     sh 'pm2 status'
                 }
@@ -66,9 +60,6 @@ pipeline {
         }
         failure {
             echo 'Deployment failed!'
-        }
-        always {
-            cleanWs()
         }
     }
 }
