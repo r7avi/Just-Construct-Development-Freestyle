@@ -28,6 +28,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+                sh 'rm -f yarn.lock'
                 sh 'yarn install'
             }
         }
